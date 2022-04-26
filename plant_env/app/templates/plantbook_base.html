@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    <!-- Treat this like inner-nav bar (can we extend twice?) -->
+    <nav class="nav bg-dark break-out">
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Active</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled">Disabled</a>
+            </li>
+          </ul>
+    </nav>
+
+    <div class="container">
+        {% include 'alert_message.html' %}
+        
+        {% block inner_content %}
+
+        {% endblock inner_content %}
+    </div>
+
+{% endblock %}

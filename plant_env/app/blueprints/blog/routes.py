@@ -156,7 +156,7 @@ def delete_plant(plant_id):
     flash(f'{plant.common_name} has been deleted.', 'secondary')
     return redirect(url_for('blog.my_plants'))
 
-# --------------- Plantbook -----------
+# --------------- Plantbook ----------- (move inside base?)
 
 @blog.route('/my-plantbook')
 @login_required
@@ -196,3 +196,12 @@ def delete_from_my_plantbook(plant_id):
         flash(f'There was an error removing {plant_to_delete.common_name} from your Plantbook', "danger")
     return redirect(url_for('blog.my_plantbook'))
 
+# -------------- Inside plantbook --------
+
+
+@blog.route('/plantbook-home/<plant_id>' , methods=['GET', 'POST'])
+@login_required
+def plantbook_home(plant_id):
+    plant = Plant.query.get_or_404(plant_id)
+    
+    return render_template("plantbook_base.html")
