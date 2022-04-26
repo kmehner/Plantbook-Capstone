@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>Search Posts</h1>
+
+<form action="" method="post">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.search(class='form-control', placeholder='Search Posts Here') }}
+
+        {{ form.submit(class='btn btn-primary w-100')}}
+    </div>
+</form>
+
+<div class="row">
+    {% for p in posts %}
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-center">{{ p.title }}</h5>
+                <div class="d-flex justify-content-center">
+                    <cite>&mdash; {{ p.author }}</cite>
+                </div>
+                <a href="{{ url_for('blog.single_post', post_id=p.id) }}" class="btn btn-primary w-100">More Info</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

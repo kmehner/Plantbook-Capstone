@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Create A Post</h1>
+
+<form action="" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.title.label }}
+        {{ form.title(class='form-control', placeholder='Creative Title Goes Here') }}
+        
+        {{ form.body.label }}
+        {{ form.body(class='form-control', placeholder='Body') }}
+
+        {{ form.image }}
+        
+        {{ form.submit(class='btn btn-outline-primary w-100') }}
+    </div>
+</form>
+
+{% endblock content %}

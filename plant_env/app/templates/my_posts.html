@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    <h1>My Posts</h1>
+
+    {% for p in posts %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ p.title }}</h5>
+                <p class="card-text">{{ p.body }}</p>
+                <div>
+                    <cite>&mdash; {{ p.author }}</cite>
+                </div>
+                <a href="{{ url_for('blog.edit_post', post_id=p.id) }}" class="btn btn-success">Edit</a>
+                <button class="btn btn-danger" type="button"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ p.id }}">Delete</button>
+            </div>
+        </div>
+  
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal{{ p.id }}" tabindex="-1" aria-labelledby="deleteModal{{ p.id }}Label" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="deleteModal{{ p.id }}Label">Delete {{ p.title }}?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                Are you sure you want to delete {{ p.title }}? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{{ url_for('blog.delete_post', post_id=p.id) }}" class="btn btn-danger">Confirm</a>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% endblock content %}
