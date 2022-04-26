@@ -61,7 +61,7 @@ class Plant(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"<Post|{self.title}>"
+        return f"<Plant|{self.title}>"
 
     def update(self, **kwargs):
         for key, value in kwargs.items():
@@ -85,6 +85,18 @@ class PlantBook(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     plant_id = db.Column(db.Integer, db.ForeignKey('plant.id'))
+    
+    def __repr__(self):
+        return f"<Plant|{self.title}>"
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 class Bookmark(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -2,7 +2,7 @@ from . import blog
 from flask import redirect, render_template, url_for, flash
 from flask_login import login_required, current_user
 from .forms import PostForm, SearchForm, PlantForm
-from .models import Plant, Post
+from .models import Plant, PlantBook, Post
 
 @blog.route('/')
 def index():
@@ -122,6 +122,15 @@ def register_plant():
         return redirect(url_for('all_plants.html'))
     return render_template('register_plant.html', title=title, form=form)
 
+@blog.route('/search-plants', methods=['GET', 'POST'])
+def search_plants():
+    title = 'Search'
+    form = SearchForm()
+    plants = Plant.query.all()
+    if form.validate_on_submit():
+        term = form.search.data
+        plants = Plant.query.filter( (Plant.common_name.ilike(f'%{term}%')) | (Plant.scientific_name.ilike(f'%{term}%')) ).all()
+    return render_template('all_plants.html', title=title, plants=plants, form=form)
 
 @blog.route('/edit-plants/<plant_id>', methods=["GET", "POST"])
 @login_required
@@ -145,3 +154,28 @@ def delete_plant(plant_id):
     return redirect(url_for('blog.my_plants'))
 
 # --------------- Plantbook -----------
+
+@blog.route('/my-plantbook')
+@login_required
+def my_plantbook():
+    plants = current_user.plants.all()
+    return render_template('my_plantbook.html', plants=plants)
+
+
+@blog.route('/add-to-my-plantbook/<plant_id>' , methods=['GET', 'POST'])
+@login_required
+def add_to_my_plantbook(plant_id):
+    plant_id = Plant.query.get_or_404(plant_id)
+    user_id = current_user
+    new_plantbook = PlantBook(plant_id=plant_id, user_id=user_id)
+    # Change to whatever page the user was on
+    return render_template('my_plantbook.html')
+
+@blog.route('/delete-from-my-plantbook/<plant_id>')
+@login_required
+def delete_from_my_plantbook(plant_id):
+    plant = PlantBook.query.get_or_404(plant_id)
+    plant.delete()
+    flash(f'{plant.common_name} has been deleted.', 'secondary')
+    return redirect(url_for('blog.my_plantbook'))
+

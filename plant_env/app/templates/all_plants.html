@@ -3,14 +3,29 @@
 
 {% block content %}
 
-    # search plant bar here with live update 
+    <form action="" method="post" class="mt-3">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            {{ form.search(class='form-control', placeholder='Search Plants Here') }}
 
+            {{ form.submit(class='btn btn-primary w-100 mt-2')}}
+        </div>
+    </form>
+
+    <hr>
+    <!-- Would like to display after the search route runs -->
+    <div class="container-fluid d-flex justify-content-around mt-3">
+        <h6>Can't find the plant that you are looking for?</h6>
+        <a href="{{ url_for('blog.register_plant') }}" class="btn btn-dark">Register Plant</a>
+    </div>
+
+    <hr>
     {% for p in plants %}
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ p.common_name }}</h5>
             <p class="card-text">{{ p.content }}</p>
-            <button class="btn btn-dark">Add to my plants</button>
+            <a href="{{ url_for('blog.add_to_my_plantbook', plant_id=p.id) }}" class="btn btn-success">Add to My Plantbook</a>
         </div>
     </div>
     {% endfor %}

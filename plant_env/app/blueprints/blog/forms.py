@@ -9,14 +9,14 @@ class PostForm(FlaskForm):
     image = FileField('Post Image')
     submit = SubmitField('Create')
 
+
+class SearchForm(FlaskForm):
+    search = StringField('Search', validators=[DataRequired()])
+    submit = SubmitField('Search')
+
 class PlantForm(FlaskForm):
     common_name = StringField('Common Name', validators=[DataRequired()])
     scientific_name = StringField('Scientific Name')
     content = StringField('Content')
     image = FileField('Plant Image')
     submit = SubmitField('Create')
-
-
-class SearchForm(FlaskForm):
-    search = StringField('Search', validators=[DataRequired()])
-    submit = SubmitField('Search')
