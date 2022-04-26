@@ -2,20 +2,18 @@
 
 
 {% block content %}
-    <p>success! You were redirected to this page</p>
-    <!-- {% for p in plants %}
+    {% for p in plants %}
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ p.common_name }}</h5>
             <h5 class="card-title">{{ p.scientific_name }}</h5>
             <p class="card-text">{{ p.content }}</p>
-            <a href="#" class="btn btn-success"></a>
             <button class="btn btn-danger" type="button"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ p.id }}">Remove from My Plantbook</button>
         </div>
-    </div> -->
+    </div>
   
     <!-- Modal -->
-    <!-- <div class="modal fade" id="deleteModal{{ p.id }}" tabindex="-1" aria-labelledby="deleteModal{{ p.id }}Label" aria-hidden="true">
+    <div class="modal fade" id="deleteModal{{ p.id }}" tabindex="-1" aria-labelledby="deleteModal{{ p.id }}Label" aria-hidden="true">
         <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -27,11 +25,11 @@
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <a href="{{ url_for('delete_from_my_plantbook', plant_id=p.id) }}" class="btn btn-danger">Confirm</a>
+            <a href="{{ url_for('blog.delete_from_my_plantbook', plant_id=p.id) }}" class="btn btn-danger">Confirm</a>
             </div>
         </div>
         </div>
     </div>
 
-    {% endfor %} -->
+    {% endfor %}
 {% endblock %}

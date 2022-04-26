@@ -46,6 +46,7 @@ class Post(db.Model):
     #     db.session.commit()
 
 
+# need to remove unique constraint - error but is created 
 class Plant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     common_name = db.Column(db.String(50), unique=True, nullable=False)
@@ -85,9 +86,6 @@ class PlantBook(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     plant_id = db.Column(db.Integer, db.ForeignKey('plant.id'))
-    
-    def __repr__(self):
-        return f"<Plant|{self.title}>"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -114,10 +114,11 @@ def register_plant():
         common_name = form.common_name.data
         scientific_name = form.scientific_name.data
         content = form.content.data
-        image = form.image.data
-        new_plant = Plant(common_name=common_name, scientific_name=scientific_name, user_id=current_user.id)
-        if image:
-            new_plant.upload_to_cloudinary(image)
+        image_url = form.image.data
+        # Image Error: Cannot adapt filetype to image
+        new_plant = Plant(common_name=common_name, scientific_name=scientific_name, content=content)
+        # if image:
+        #     new_plant.upload_to_cloudinary(image)
         flash(f"{new_plant.title} has been created", 'secondary')
         return redirect(url_for('all_plants.html'))
     return render_template('register_plant.html', title=title, form=form)
@@ -127,6 +128,8 @@ def search_plants():
     title = 'Search'
     form = SearchForm()
     plants = Plant.query.all()
+    # NOT DONE - if plant in current user plantbook, do not display
+    current_user_plants = current_user.plants.all()
     if form.validate_on_submit():
         term = form.search.data
         plants = Plant.query.filter( (Plant.common_name.ilike(f'%{term}%')) | (Plant.scientific_name.ilike(f'%{term}%')) ).all()
@@ -165,17 +168,31 @@ def my_plantbook():
 @blog.route('/add-to-my-plantbook/<plant_id>' , methods=['GET', 'POST'])
 @login_required
 def add_to_my_plantbook(plant_id):
-    plant_id = Plant.query.get_or_404(plant_id)
-    user_id = current_user
-    new_plantbook = PlantBook(plant_id=plant_id, user_id=user_id)
+    plant = Plant.query.get_or_404(plant_id)
+    plantbook = current_user.plants.all()
+
+    if plant not in plantbook:
+        plant_id = plant.id
+        user_id = current_user.id
+        new_plantBook = PlantBook(plant_id=plant_id, user_id=user_id)
+        flash(f"{plant.common_name} has been added to your Plantbook!", "success")
+    else:
+        flash(f"{plant.common_name} already in your Plantbook!", "danger")
+        return redirect(url_for('blog.search_plants'))
     # Change to whatever page the user was on
-    return render_template('my_plantbook.html')
+    return redirect(url_for('blog.search_plants'))
 
 @blog.route('/delete-from-my-plantbook/<plant_id>')
 @login_required
 def delete_from_my_plantbook(plant_id):
-    plant = PlantBook.query.get_or_404(plant_id)
-    plant.delete()
-    flash(f'{plant.common_name} has been deleted.', 'secondary')
+    plant_to_delete = Plant.query.get_or_404(plant_id)
+    current_user_id = current_user.id
+    
+    plant = PlantBook.query.filter( (PlantBook.plant_id == plant_id) | (PlantBook.user_id == current_user_id) ).first()
+    if plant:
+        plant.delete()
+        flash(f'{plant_to_delete.common_name} has been removed from your Plantbook.', 'secondary')
+    else:
+        flash(f'There was an error removing {plant_to_delete.common_name} from your Plantbook', "danger")
     return redirect(url_for('blog.my_plantbook'))
 
