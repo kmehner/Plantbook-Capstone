@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    {% for p in plants %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ p.common_name }}</h5>
+            <p class="card-text">{{ p.content }}</p>
+            <button class="btn btn-dark">Add to my plants</button>
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock content %}

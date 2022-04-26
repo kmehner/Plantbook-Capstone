@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Register a Plant</h1>
+
+<form action="" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.common_name.label }}
+        {{ form.common_name(class='form-control', placeholder='Common Name') }}
+        
+        {{ form.scientific_name.label }}
+        {{ form.scientific_name(class='form-control', placeholder='scientific Name') }}
+
+        {{ form.content.label }}
+        {{ form.content(class='form-control', placeholder='Content') }}
+
+        {{ form.image }}
+        
+        {{ form.submit(class='btn btn-outline-primary w-100') }}
+    </div>
+</form>
+
+{% endblock content %}

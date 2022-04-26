@@ -1,8 +1,8 @@
 from . import blog
 from flask import redirect, render_template, url_for, flash
 from flask_login import login_required, current_user
-from .forms import PostForm, SearchForm
-from .models import Post
+from .forms import PostForm, SearchForm, PlantForm
+from .models import Plant, Post
 
 @blog.route('/')
 def index():
@@ -85,3 +85,67 @@ def delete_post(post_id):
         post.delete()
         flash(f'{post.title} has been deleted.', 'secondary')
     return redirect(url_for('blog.my_posts'))
+
+
+# ------------------- Plants ----------------------
+@blog.route('/all-plants')
+@login_required
+def all_plants():
+    title = 'All Plants'
+    plants = Plant.query.all()
+    return render_template('all_plants.html', title=title, plants=plants)
+
+# ------------ Plant database functionality ------------
+
+@blog.route('/my-plants')
+@login_required
+def my_plants():
+    title = 'My Plants'
+    plants = Plant.query.all()
+    return render_template('my_plants.html', title=title, plants=plants)
+
+
+@blog.route('/register-plant', methods=['GET', 'POST'])
+@login_required
+def register_plant():
+    title = 'Register a plant'
+    form = PlantForm()
+    if form.validate_on_submit():
+        common_name = form.common_name.data
+        scientific_name = form.scientific_name.data
+        content = form.content.data
+        image = form.image.data
+        new_plant = Plant(common_name=common_name, scientific_name=scientific_name, user_id=current_user.id)
+        if image:
+            new_plant.upload_to_cloudinary(image)
+        flash(f"{new_plant.title} has been created", 'secondary')
+        return redirect(url_for('all_plants.html'))
+    return render_template('register_plant.html', title=title, form=form)
+
+
+@blog.route('/edit-plants/<plant_id>', methods=["GET", "POST"])
+@login_required
+def edit_plant(plant_id):
+    plant = Plant.query.get_or_404(plant_id)
+    if plant.publisher != current_user:
+        flash('You do not have edit access to edit this plant info.', 'danger')
+        return redirect(url_for('blog.my_plants'))
+    title = f"Edit {plant.common_name}"
+    form = PlantForm()
+    if form.validate_on_submit():
+        plant.update(**form.data)
+        flash(f'{plant.common_name} has been updated', 'warning')
+        return redirect(url_for('blog.my_plants'))
+
+    return render_template('plant_edit.html', title=title, plant=plant, form=form)
+
+@blog.route('/delete-plant/<plant_id>')
+@login_required
+def delete_plant(plant_id):
+    plant = Plant.query.get_or_404(plant_id)
+    if plant.publisher != current_user:
+        flash('You do not have delete access to this plant', 'danger')
+    else:
+        plant.delete()
+        flash(f'{plant.common_name} has been deleted.', 'secondary')
+    return redirect(url_for('blog.my_plants'))
