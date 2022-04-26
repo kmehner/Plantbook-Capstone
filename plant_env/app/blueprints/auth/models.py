@@ -15,7 +15,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(256), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
-    plants = db.relationship('Plant', backref='publisher', lazy='dynamic')
+    plants = db.relationship('Plant', secondary='plant_book',backref='publisher', lazy='dynamic')
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -16,6 +16,8 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), unique=True, nullable=False)
     body = db.Column(db.String(255))
+    category = db.Column(db.String(50))
+    plant_id = db.Column(db.Integer, db.ForeignKey('plant.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     image_url = db.Column(db.String(100), default='https://via.placeholder.com/500')
@@ -49,7 +51,7 @@ class Plant(db.Model):
     common_name = db.Column(db.String(50), unique=True, nullable=False)
     scientific_name = db.Column(db.String(50), unique=True)
     content = db.Column(db.String(200))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    posts = db.relationship('Post', backref='plant', lazy='dynamic')
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     image_url = db.Column(db.String(100), default='https://via.placeholder.com/500')
 
@@ -78,3 +80,13 @@ class Plant(db.Model):
 
 # Bookmark Post class here 
 # Want to be able to save posts from community page here 
+
+class PlantBook(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    plant_id = db.Column(db.Integer, db.ForeignKey('plant.id'))
+
+class Bookmark(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))

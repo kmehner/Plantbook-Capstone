@@ -127,9 +127,6 @@ def register_plant():
 @login_required
 def edit_plant(plant_id):
     plant = Plant.query.get_or_404(plant_id)
-    if plant.publisher != current_user:
-        flash('You do not have edit access to edit this plant info.', 'danger')
-        return redirect(url_for('blog.my_plants'))
     title = f"Edit {plant.common_name}"
     form = PlantForm()
     if form.validate_on_submit():
@@ -143,9 +140,8 @@ def edit_plant(plant_id):
 @login_required
 def delete_plant(plant_id):
     plant = Plant.query.get_or_404(plant_id)
-    if plant.publisher != current_user:
-        flash('You do not have delete access to this plant', 'danger')
-    else:
-        plant.delete()
-        flash(f'{plant.common_name} has been deleted.', 'secondary')
+    plant.delete()
+    flash(f'{plant.common_name} has been deleted.', 'secondary')
     return redirect(url_for('blog.my_plants'))
+
+# ------------ 
