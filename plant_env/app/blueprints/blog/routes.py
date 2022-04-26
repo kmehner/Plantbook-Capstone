@@ -144,4 +144,4 @@ def delete_plant(plant_id):
     flash(f'{plant.common_name} has been deleted.', 'secondary')
     return redirect(url_for('blog.my_plants'))
 
-# ------------ 
+# --------------- Plantbook -----------
