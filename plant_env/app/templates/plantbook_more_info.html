@@ -3,15 +3,40 @@
 
 {% block inner_content %}
     <!-- Want this to be + icon -->
-    <a href="{{ url_for('blog.create_post', plant_id=plant.id, category=category) }}" class="btn btn-success">Create new Post</a>
+    <a href="{{ url_for('blog.create_post', plant_id=plant.id, category=category) }}" class="btn fa fa-plus mt-3 d-flex justify-content-center"></a>
 
     {% for p in posts %}
-    <div class="card mt-2">
-        <div class="card-body">
-            <h5 class="card-title">{{ p.title }}</h5>
-            <p class="card-text">{{ p.body }}</p>
-        </div>
-    </div>
+        {% if category == 'watering_schedule' %}
+
+            <div class="card mt-2">
+                <div class="card-body">
+                    <p class="card-text">{{ p.water_quantity }}></p>
+                    <p class="card-text">{{ p.water_measurement }}</p>
+                    <p class="card-text">{{ p.frequency_int }}</p>
+                    <p class="card-text">{{ p.frequency_measurement }}</p>
+                </div>
+            </div>
+
+        {% elif category == 'photo_diary' %}
+            <div class="card mt-2">
+                <div class="card-body">
+                    <p class="card-text">{{ p.date_created }}></p>
+                    <p class="card-img">{{ p.image }}</p>
+                    <p class="card-img">{{ p.body }}</p>
+                </div>
+            </div>
+
+        {% else %}
+            
+            <div class="card mt-2">
+                <div class="card-body">
+                    <h5 class="card-title">{{ p.title }}</h5>
+                    <p class="card-text">{{ p.body }}</p>
+                    <p class="card-text">{{ p.image }}</p>
+                </div>
+            </div>
+        {% endif %}
+
     {% endfor %}
 
 {% endblock inner_content %}

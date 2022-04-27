@@ -14,8 +14,12 @@ import os
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(20), unique=True, nullable=False)
+    title = db.Column(db.String(20))
     body = db.Column(db.String(255))
+    water_quantity = db.Column(db.Integer)
+    water_measurement = db.Column(db.String(50))
+    frequency_int = db.Column(db.Integer)
+    frequency_measurement = db.Column(db.String(50))
     category = db.Column(db.String(50))
     plant_id = db.Column(db.Integer, db.ForeignKey('plant.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -49,8 +53,8 @@ class Post(db.Model):
 # need to remove unique constraint - error but is created 
 class Plant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    common_name = db.Column(db.String(50), unique=True, nullable=False)
-    scientific_name = db.Column(db.String(50), unique=True)
+    common_name = db.Column(db.String(50), nullable=False)
+    scientific_name = db.Column(db.String(50))
     content = db.Column(db.String(200))
     posts = db.relationship('Post', backref='plant', lazy='dynamic')
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

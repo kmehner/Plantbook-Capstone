@@ -3,21 +3,53 @@
 
 {% block inner_content %}
 
-<h1>Create A Post</h1>
+<h1>{{ title }}</h1>
 
 <form action="" method="post" enctype="multipart/form-data">
     {{ form.csrf_token }}
+
+    {% if category=='watering_schedule' %}
+        <div class="form-group">
+        {{ form.water_quantity.label }}
+        {{ form.water_quantity(class='form-control', placeholder='Water Quantity') }}
+
+        {{ form.water_measurement.label }}
+        {{ form.water_measurement(class='form-control') }}
+
+        
+        {{ form.frequency_int.label }}
+        {{ form.frequency_int(class='form-control', placeholder='Frequency') }}
+
+        {{ form.frequency_measurement.label }}
+        {{ form.frequency_measurement(class='form-control') }} 
+
+        {{ form.submit(class='btn btn-outline-primary w-100') }}
+        </div>
+
+    {% elif category=='photo_diary' %}
+        <div class="form-group">
+
+        <p>Please CHOOSE the Image you would like to add</p>
+        {{ form.image }}
+
+        {{ form.body(class='form-control', placeholder='Note') }}
+
+        {{ form.submit(class='btn btn-outline-primary w-100') }}
+        </div>
+
+    {% else %}
     <div class="form-group">
         {{ form.title.label }}
-        {{ form.title(class='form-control', placeholder='Creative Title Goes Here') }}
+        {{ form.title(class='form-control', placeholder='') }}
         
         {{ form.body.label }}
-        {{ form.body(class='form-control', placeholder='Body') }}
+        {{ form.body(class='form-control', placeholder='') }}
 
         {{ form.image }}
         
         {{ form.submit(class='btn btn-outline-primary w-100') }}
     </div>
+    {% endif %}
 </form>
 
 {% endblock inner_content %}

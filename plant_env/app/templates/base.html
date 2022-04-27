@@ -12,16 +12,17 @@
         <title>Plantbook | {{ title }}</title>
     </head>
         <div class="row bg-dark">
-            <h1 class="text-center text-white">Plantbook</h1>
+            <h1 class="text-center text-white">PlantBook</h1>
         </div>
         <!-- NAVBAR START -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Navbar2</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div class="navbar-nav">
+                <!-- Need to display this content on the right, but if it's in the div above the it won't collapse -->
+              <div class="navbar-nav d-flex justify-content-end me-5">
                     {% if current_user.is_authenticated %}
                     <a class="nav-item nav-link active" href="{{ url_for('blog.index') }}">Home <span class="sr-only">(current)</span></a>
                     <a class="nav-item nav-link active" href="{{ url_for('blog.search_posts') }}">Search Posts <span class="sr-only">(current)</span></a>
@@ -34,6 +35,8 @@
                                 <!-- Search plants and route to register plant within all plants -->
                             <li><a class="dropdown-item" href="{{ url_for('blog.search_plants') }}">All Plants</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('blog.register_plant') }}">Register Plant</a></li>
+                            <!-- Want to eventually hide this and make it an "Admin feature" -->
+                            <li><a class="dropdown-item" href="{{ url_for('blog.my_plants') }}">Edit Plants</a></li>
                         </ul>
                     </div>
     

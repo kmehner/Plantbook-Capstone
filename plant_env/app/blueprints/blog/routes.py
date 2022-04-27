@@ -2,7 +2,7 @@ from numpy import add_newdoc
 from . import blog
 from flask import redirect, render_template, url_for, flash
 from flask_login import login_required, current_user
-from .forms import PostForm, SearchForm, PlantForm
+from .forms import HealthForm, PostForm, SearchForm, PlantForm, WaterForm
 from .models import Plant, PlantBook, Post
 
 @blog.route('/')
@@ -16,18 +16,62 @@ def index():
 @login_required
 def create_post(plant_id, category):
     plant = Plant.query.get_or_404(plant_id)
-    title = 'Create A Post'
-    form = PostForm()
-    if form.validate_on_submit():
-        title = form.title.data
-        body = form.body.data
-        image = form.image.data
-        new_post = Post(title=title, body=body, user_id=current_user.id, category=category, plant_id=plant_id)
-        if image:
-            new_post.upload_to_cloudinary(image)
-        flash(f"{new_post.title} has been created", 'secondary')
-        return redirect(url_for('blog.plantbook_more_info', plant_id = plant_id, category=category))
-    return render_template('create_post.html', title=title, form=form, plant_id=plant_id, category=category, plant=plant)
+    water_measurements = []
+
+    # Calling the template
+    if category == 'health_issues':
+        title = form = HealthForm()
+        title = 'Health Issue'
+        if form.validate_on_submit():
+            title = form.title.data
+            body = form.body.data
+            image = form.image.data
+            new_post = Post(title=title, body=body, user_id=current_user.id, category=category, plant_id=plant_id)
+            if image:
+                new_post.upload_to_cloudinary(image)
+            flash(f"{new_post.title} has been created", 'secondary')
+            return redirect(url_for('blog.plantbook_more_info', plant_id = plant_id, category=category))
+
+    elif category == 'watering_schedule':
+        form = WaterForm()
+        title = 'Watering Schedule'
+        water_measurements = ['Fluid Ounce', 'Liter', 'Cup', 'Mililiter']
+        if form.validate_on_submit():
+            water_quantity = form.water_quantity.data
+            water_measurement = form.water_measurement.data
+            frequency_int = form.frequency_int.data
+            frequency_measurement = form.frequency_measurement.data
+            new_post = Post(water_quantity=water_quantity, water_measurement=water_measurement, frequency_int=frequency_int, frequency_measurement=frequency_measurement, user_id=current_user.id, category=category, plant_id=plant_id)
+
+            flash(f"Watering schedule has been created", 'secondary')
+            return redirect(url_for('blog.plantbook_more_info', plant_id = plant_id, category=category))
+ 
+    elif category == 'photo_diary':
+        form = PostForm()
+        title = 'Photo Diary'
+        if form.validate_on_submit():
+            body = form.body.data
+
+            new_post = Post(body=body, user_id=current_user.id, category=category, plant_id=plant_id)
+
+            flash(f"A new photo entry has been created", 'secondary')
+            return redirect(url_for('blog.plantbook_more_info', plant_id = plant_id, category=category))
+
+    else: 
+        form = PostForm()
+        title = 'Post'
+        if form.validate_on_submit():
+            title = form.title.data
+            body = form.body.data
+            image = form.image.data
+            new_post = Post(title=title, body=body, user_id=current_user.id, category=category, plant_id=plant_id)
+            if image:
+                new_post.upload_to_cloudinary(image)
+            flash(f"{new_post.title} has been created", 'secondary')
+            return redirect(url_for('blog.plantbook_more_info', plant_id = plant_id, category=category))
+
+    return render_template('create_post.html', title=title, form=form, plant_id=plant_id, category=category, plant=plant, water_measurements=water_measurements)
+
 
 
 @blog.route('/my-posts')
@@ -99,6 +143,7 @@ def all_plants():
 
 # ------------ Plant database functionality ------------
 
+# Will be backend way to edit plant (no user_id attached to plant so whoever has access to this can edit/delete)
 @blog.route('/my-plants')
 @login_required
 def my_plants():
@@ -121,8 +166,8 @@ def register_plant():
         new_plant = Plant(common_name=common_name, scientific_name=scientific_name, content=content)
         # if image:
         #     new_plant.upload_to_cloudinary(image)
-        flash(f"{new_plant.title} has been created", 'secondary')
-        return redirect(url_for('all_plants.html'))
+        flash(f"{new_plant.common_name} has been created", 'secondary')
+        return redirect(url_for('blog.search_plants'))
     return render_template('register_plant.html', title=title, form=form)
 
 @blog.route('/search-plants', methods=['GET', 'POST'])
