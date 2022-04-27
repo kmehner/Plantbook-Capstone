@@ -4,21 +4,15 @@
 {% block content %}
 
     <!-- Treat this like inner-nav bar (can we extend twice?) -->
-    <nav class="nav bg-dark break-out">
-        <ul class="nav justify-content-end">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Active</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled">Disabled</a>
-            </li>
-          </ul>
+    <nav class="nav bg-dark navbar-dark break-out">
+        <div class="navbar nav justify-content-end">
+          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plant_info', plant_id = plant.id) }}">Plant Info</a>
+          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plantbook_more_info', plant_id = plant.id, category='health_issues') }}">Health Issues</a>
+          <a class="nav-item nav-link link-light active" href="#">Watering Schedule</a>
+          <a class="nav-item nav-link link-light active" href="#">Soil Mix</a>
+          <a class="nav-item nav-link link-light active" href="#">Picture Diary</a>
+
+        </div>
     </nav>
 
     <div class="container">
@@ -28,5 +22,6 @@
 
         {% endblock inner_content %}
     </div>
+
 
 {% endblock %}

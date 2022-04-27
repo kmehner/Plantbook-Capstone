@@ -10,21 +10,21 @@ def index():
     posts = Post.query.all()
     return render_template('index.html', title=title, posts=posts)
 
-
-@blog.route('/create-post', methods=['GET', 'POST'])
+# Alter create post to take in plant_id and category (depending where it is called from)
+@blog.route('/create-post/<plant_id>/<category>', methods=['GET', 'POST'])
 @login_required
-def create_post():
+def create_post(plant_id, category):
     title = 'Create A Post'
     form = PostForm()
     if form.validate_on_submit():
         title = form.title.data
         body = form.body.data
         image = form.image.data
-        new_post = Post(title=title, body=body, user_id=current_user.id)
+        new_post = Post(title=title, body=body, user_id=current_user.id, category=category, plant_id=plant_id)
         if image:
             new_post.upload_to_cloudinary(image)
         flash(f"{new_post.title} has been created", 'secondary')
-        return redirect(url_for('blog.index'))
+        return render_template(f"{category}.html") 
     return render_template('create_post.html', title=title, form=form)
 
 
@@ -41,7 +41,7 @@ def my_posts():
 def search_posts():
     title = 'Search'
     form = SearchForm()
-    posts = []
+    posts = [] 
     if form.validate_on_submit():
         term = form.search.data
         posts = Post.query.filter( (Post.title.ilike(f'%{term}%')) | (Post.body.ilike(f'%{term}%')) ).all()
@@ -204,4 +204,38 @@ def delete_from_my_plantbook(plant_id):
 def plantbook_home(plant_id):
     plant = Plant.query.get_or_404(plant_id)
     
-    return render_template("plantbook_base.html")
+    return render_template("plant_info.html", plant=plant)
+
+# Can add this to main dictionary as button ("Get info")
+@blog.route('/plant-info/<plant_id>' , methods=['GET', 'POST'])
+@login_required
+def plant_info(plant_id):
+    plant = Plant.query.get_or_404(plant_id)
+    return render_template("plant_info.html", plant=plant)
+
+
+
+# Display page based on category 
+@blog.route('/plantbook/<plant_id>/<category>', methods=['GET', 'POST'])
+@login_required
+def plantbook_more_info(plant_id, category):
+ 
+    plant = Plant.query.get_or_404(plant_id)
+    plant_id = plant_id
+    # current_user
+    current_user_id = current_user.id
+    category=category
+
+    # Query for posts you want from the posts (we need this id)
+    posts = Post.query.filter( (Post.plant_id == plant_id) and (Post.user_id == current_user_id) and (Post.category == category) ).all()
+    
+    return render_template(f'plantbook_more_info.html', plant=plant, posts=posts, category=category)
+
+
+
+
+
+
+
+
+

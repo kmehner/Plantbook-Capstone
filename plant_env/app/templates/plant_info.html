@@ -1,0 +1,14 @@
+{% extends 'plantbook_base.html' %}
+
+
+{% block inner_content %}
+
+    <div class="card mt-2">
+        <div class="card-body">
+            <h5 class="card-title">{{ plant.common_name }}</h5>
+            <p class="card-text">{{ plant.scientific_name }}</p>
+            <p class="card-text">{{ plant.content }}</p>
+        </div>
+    </div>
+
+{% endblock inner_content %}

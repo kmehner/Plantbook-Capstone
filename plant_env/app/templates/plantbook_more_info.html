@@ -1,0 +1,17 @@
+{% extends 'plantbook_base.html' %}
+
+
+{% block inner_content %}
+    <!-- Want this to be + icon -->
+    <a href="{{ url_for('blog.create_post', plant_id=plant.id, category=category) }}" class="btn btn-success">Create new Post"</a>
+
+    {% for p in posts %}
+    <div class="card mt-2">
+        <div class="card-body">
+            <h5 class="card-title">{{ p.title }}</h5>
+            <p class="card-text">{{ p.body }}</p>
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock inner_content %}
