@@ -66,7 +66,7 @@ class Plant(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"<Plant|{self.title}>"
+        return f"<Plant|{self.common_name}>"
 
     def update(self, **kwargs):
         for key, value in kwargs.items():

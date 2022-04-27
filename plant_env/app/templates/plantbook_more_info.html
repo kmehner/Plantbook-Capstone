@@ -14,6 +14,10 @@
                     <p class="card-text">{{ p.water_measurement }}</p>
                     <p class="card-text">{{ p.frequency_int }}</p>
                     <p class="card-text">{{ p.frequency_measurement }}</p>
+                    <div class="d-flex justify-content-end">
+                        <a href=" {{ url_for('blog.edit_post', post_id=p.id, category=p.category, plant=plant) }}" class="btn btn-success me-2"><span class="fas fa-edit"></span></a>
+                        <button class="btn btn-danger" type="button"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ p.id }}"><span class="fas fa-trash-alt"></span></button>
+                    </div>
                 </div>
             </div>
 
@@ -23,6 +27,10 @@
                     <p class="card-text">{{ p.date_created }}></p>
                     <p class="card-img">{{ p.image }}</p>
                     <p class="card-img">{{ p.body }}</p>
+                    <div class="d-flex justify-content-end">
+                        <a href=" {{ url_for('blog.edit_post', post_id=p.id, category=p.category, plant=plant) }}" class="btn btn-success me-2"><span class="fas fa-edit"></span></a>
+                        <button class="btn btn-danger" type="button"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ p.id }}"><span class="fas fa-trash-alt"></span></button>
+                    </div>
                 </div>
             </div>
 
@@ -33,9 +41,33 @@
                     <h5 class="card-title">{{ p.title }}</h5>
                     <p class="card-text">{{ p.body }}</p>
                     <p class="card-text">{{ p.image }}</p>
+                    <div class="d-flex justify-content-end">
+                        <a href=" {{ url_for('blog.edit_post', post_id=p.id, category=p.category, plant=plant) }}" class="btn btn-success me-2"><span class="fas fa-edit"></span></a>
+                        <button class="btn btn-danger" type="button"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ p.id }}"><span class="fas fa-trash-alt"></span></button>
+                    </div>
                 </div>
             </div>
         {% endif %}
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal{{ p.id }}" tabindex="-1" aria-labelledby="deleteModal{{ p.id }}Label" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="deleteModal{{ p.id }}Label">Delete this post?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            Are you sure you want to delete this post? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a href="{{ url_for('blog.delete_post', post_id=p.id) }}" class="btn btn-danger">Confirm</a>
+            </div>
+        </div>
+        </div>
+    </div>
 
     {% endfor %}
 

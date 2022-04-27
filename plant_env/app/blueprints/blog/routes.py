@@ -2,7 +2,7 @@ from numpy import add_newdoc
 from . import blog
 from flask import redirect, render_template, url_for, flash
 from flask_login import login_required, current_user
-from .forms import HealthForm, PostForm, SearchForm, PlantForm, WaterForm
+from .forms import HealthForm, PhotoForm, PostForm, SearchForm, PlantForm, WaterForm
 from .models import Plant, PlantBook, Post
 
 @blog.route('/')
@@ -47,13 +47,11 @@ def create_post(plant_id, category):
             return redirect(url_for('blog.plantbook_more_info', plant_id = plant_id, category=category))
  
     elif category == 'photo_diary':
-        form = PostForm()
+        form = PhotoForm()
         title = 'Photo Diary'
         if form.validate_on_submit():
             body = form.body.data
-
             new_post = Post(body=body, user_id=current_user.id, category=category, plant_id=plant_id)
-
             flash(f"A new photo entry has been created", 'secondary')
             return redirect(url_for('blog.plantbook_more_info', plant_id = plant_id, category=category))
 
@@ -104,21 +102,31 @@ def single_post(post_id):
 
 
 # Edit a Single Post by ID
-@blog.route('/edit-posts/<post_id>', methods=["GET", "POST"])
+@blog.route('/edit-posts/<post_id>/<category>/<plant>', methods=["GET", "POST"])
 @login_required
-def edit_post(post_id):
+def edit_post(post_id, category, plant):
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
         flash('You do not have edit access to this post.', 'danger')
         return redirect(url_for('blog.my_posts'))
-    title = f"Edit {post.title}"
-    form = PostForm()
+    
+    title = f"Edit post"
+
+    if category=='watering_schedule':
+        form = WaterForm()
+    elif category=='health_issues':
+        form = HealthForm()
+    elif category=='photo_diary':
+        form = PhotoForm()
+    else:
+        form = PostForm()
+    
     if form.validate_on_submit():
         post.update(**form.data)
-        flash(f'{post.title} has been updated', 'warning')
-        return redirect(url_for('blog.my_posts'))
+        flash(f'The post has been updated', 'warning')
 
-    return render_template('post_edit.html', title=title, post=post, form=form)
+
+    return render_template('post_edit.html', title=title, post=post, form=form, category=category, plant=plant)
 
 
 @blog.route('/delete-posts/<post_id>')

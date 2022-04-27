@@ -24,8 +24,8 @@ class PlantForm(FlaskForm):
 
 class HealthForm(FlaskForm):
     title = StringField('Health Issue', validators=[DataRequired()])
-    body = StringField('Note', validators=[DataRequired()])
-    image = FileField('Post Image')
+    body = StringField('Note')
+    image = FileField('Image')
     submit = SubmitField('Create')
 
 class WaterForm(FlaskForm):
@@ -41,4 +41,10 @@ class WaterForm(FlaskForm):
                                  ('py', 'Python'), 
                                  ('text', 'Plain Text')
                                ])
+    submit = SubmitField('Create')
+
+
+class PhotoForm(FlaskForm):
+    body = StringField('Note')
+    image = FileField('Image')
     submit = SubmitField('Create')
