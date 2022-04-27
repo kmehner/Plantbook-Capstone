@@ -1,3 +1,4 @@
+from numpy import add_newdoc
 from . import blog
 from flask import redirect, render_template, url_for, flash
 from flask_login import login_required, current_user
@@ -14,6 +15,7 @@ def index():
 @blog.route('/create-post/<plant_id>/<category>', methods=['GET', 'POST'])
 @login_required
 def create_post(plant_id, category):
+    plant = Plant.query.get_or_404(plant_id)
     title = 'Create A Post'
     form = PostForm()
     if form.validate_on_submit():
@@ -24,8 +26,8 @@ def create_post(plant_id, category):
         if image:
             new_post.upload_to_cloudinary(image)
         flash(f"{new_post.title} has been created", 'secondary')
-        return render_template(f"{category}.html") 
-    return render_template('create_post.html', title=title, form=form)
+        return redirect(url_for('blog.plantbook_more_info', plant_id = plant_id, category=category))
+    return render_template('create_post.html', title=title, form=form, plant_id=plant_id, category=category, plant=plant)
 
 
 @blog.route('/my-posts')
@@ -188,7 +190,7 @@ def delete_from_my_plantbook(plant_id):
     plant_to_delete = Plant.query.get_or_404(plant_id)
     current_user_id = current_user.id
     
-    plant = PlantBook.query.filter( (PlantBook.plant_id == plant_id) | (PlantBook.user_id == current_user_id) ).first()
+    plant = PlantBook.query.filter( (PlantBook.plant_id == plant_id) and (PlantBook.user_id == current_user_id) ).first()
     if plant:
         plant.delete()
         flash(f'{plant_to_delete.common_name} has been removed from your Plantbook.', 'secondary')
@@ -204,7 +206,7 @@ def delete_from_my_plantbook(plant_id):
 def plantbook_home(plant_id):
     plant = Plant.query.get_or_404(plant_id)
     
-    return render_template("plant_info.html", plant=plant)
+    return render_template("plantbook_base.html", plant=plant)
 
 # Can add this to main dictionary as button ("Get info")
 @blog.route('/plant-info/<plant_id>' , methods=['GET', 'POST'])
@@ -224,11 +226,13 @@ def plantbook_more_info(plant_id, category):
     plant_id = plant_id
     # current_user
     current_user_id = current_user.id
+    # category 
     category=category
 
     # Query for posts you want from the posts (we need this id)
-    posts = Post.query.filter( (Post.plant_id == plant_id) and (Post.user_id == current_user_id) and (Post.category == category) ).all()
+    posts = Post.query.filter( Post.plant_id == plant_id, Post.user_id == current_user_id, Post.category == category).all()
     
+    # Return render_template for basic display 
     return render_template(f'plantbook_more_info.html', plant=plant, posts=posts, category=category)
 
 
