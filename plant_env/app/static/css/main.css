@@ -1,15 +1,30 @@
 body {
 	font-family: 'Open Sans', sans-serif;
+    background-color: #E7DDDA;
 }
 
 nav img{
     width: 8%;
 }
 
+div.card{
+    background-color: #F7F3F2;
+}
+
+#nav-head{
+    background-color: #A14A76;
+    color: white;
+}
+
+/* #move-right{
+    display: inline-flex;
+    justify-content: end;
+} */
 
 .break-out{
     width: 100vw;
     position: relative;
     left: calc(-1 * (100vw - 100%) / 2);
     color: white;
+    background-color: #B25785;
 }

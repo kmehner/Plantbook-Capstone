@@ -5,10 +5,23 @@
 
     <div class="container text-center pt-4">
         {% if current_user.is_authenticated %}
-        <h3>Hello {{ current_user.username }}!</h3>
         {% else %}
         <h3>Hello! Please Sign Up or Login</h3>
         {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <form action="" class="post" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+
+            {{ form.category_to_filter.label }}
+            {{ form.category_to_filter(class='form-control') }} 
+
+            {{ form.submit(class='btn btn-outline-primary w-100') }}
+
+            </form>
+        </div>
     </div>
 
     <div class="row">

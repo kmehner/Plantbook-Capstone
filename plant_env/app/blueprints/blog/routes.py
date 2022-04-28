@@ -1,16 +1,25 @@
 from . import blog
 from flask import redirect, render_template, url_for, flash, g
 from flask_login import login_required, current_user
-from .forms import HealthForm, PhotoForm, PostForm, SearchForm, PlantForm, WaterForm
+from .forms import HealthForm, PhotoForm, PostForm, SearchForm, PlantForm, WaterForm, CategoryForm
 from .models import Plant, PlantBook, Post
 
 # ----------- Home Page -----------
 # Add upvote feature, comment feature, and filter (using join table)
-@blog.route('/')
+@blog.route('/', methods=['GET', 'POST'])
 def index():
     title = 'Home'
     posts = Post.query.all()
-    return render_template('index.html', title=title, posts=posts)
+
+    # Filter by Category
+    form = CategoryForm()
+
+    if form.validate_on_submit():
+        category_to_filter = form.category_to_filter.data
+        posts = Post.query.filter(Post.category == category_to_filter ).all()
+        return render_template('index.html', title=title, posts=posts, form = form)
+
+    return render_template('index.html', title=title, posts=posts, form = form)
 
 # Get A Single Post by ID
 @blog.route('/posts/<post_id>')
