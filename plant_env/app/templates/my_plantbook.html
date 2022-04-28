@@ -28,12 +28,13 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h5 class="card-title">{{ p.common_name }}</h5>
-                            <a href=" {{ url_for('blog.plant_info', plant_id=p.id) }}" class="btn fas fa-plus btn-success"></a>
+                            <a href=" {{ url_for('blog.plant_info', plant_id=p.id) }}" class="btn fas fa-check btn-success"></a>
                         </div>
                         <p class="card-subtitle fws-italic text-muted">{{ p.scientific_name }}</p>
-                        <p class="card-text">{{ p.content }}</p>
-                        <!-- get button to show up anywhere else plssss -->
-                        <button class="btn fas fa-trash-alt btn-danger" type="button"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ p.id }}"></button>
+                        <div class="d-flex justify-content-between mt-1">
+                            <p class="card-text">{{ p.content }}</p> 
+                            <button class="btn fas fa-trash-alt btn-danger" type="button"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ p.id }}"></button>
+                        </div>
                     </div>
                 </div>
 

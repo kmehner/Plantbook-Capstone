@@ -12,21 +12,37 @@
     </div>
 
     <div class="row">
-
         {% for p in posts %}
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="card-title text-center">{{ p.title }}</h5>
-                    <p class="card-title text-center">{{ p.body }}</p>
-                    <!-- Display category img based on category -->
-                    <p class="card-title text-center">{{ p.category }}(FIX)</p>
-                    <div class="d-flex justify-content-center">
-                    <a href="{{ url_for('blog.single_post', post_id=p.id) }}" class="btn btn-primary w-50">More Info</a>
+            {% if p.category == "watering_schedule" %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Watering Schedule</h5>
+                            <div class="card-title text-center">
+                                <p>{{p.water_quantity}} {{p.water_measurement}} of water</p>
+                                <p>Every {{p.frequency_int}} {{p.frequency_measurement}}</p>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                            <a href="{{ url_for('blog.single_post', post_id=p.id) }}" class="btn btn-primary w-50">More Info</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            {% else %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ p.title }}</h5>
+                            <p class="card-title text-center">{{ p.body }}</p>
+                            <!-- Display category img based on category -->
+                            <p class="card-title text-center">{{ p.category }}(FIX)</p>
+                            <div class="d-flex justify-content-center">
+                            <a href="{{ url_for('blog.single_post', post_id=p.id) }}" class="btn btn-primary w-50">More Info</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
 

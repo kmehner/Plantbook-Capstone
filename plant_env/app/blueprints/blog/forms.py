@@ -31,15 +31,17 @@ class HealthForm(FlaskForm):
 class WaterForm(FlaskForm):
     water_quantity = IntegerField('Water Quantity', validators=[DataRequired()])
     water_measurement = SelectField('Water Measurement', choices=[
-                                 ('cpp', 'C++'), 
-                                 ('py', 'Python'), 
-                                 ('text', 'Plain Text')
+                                'Fluid Ounce(s)',
+                                 'TPS',
+                                 'TBSP',
+                                 'Cup',
+                                 'Liter',
+                                 'Gallon'
                                ])
     frequency_int = IntegerField('Frequency', validators=[DataRequired()])
     frequency_measurement = SelectField('Frequency Measurement', validators=[DataRequired()], choices=[
-                                 ('C++', 'C++'), 
-                                 ('Python', 'Python'), 
-                                 ('Plain Text', 'Plain Text')
+                                 'Day(s)',
+                                 'Week(s)',
                                ])
     submit = SubmitField('Create')
 

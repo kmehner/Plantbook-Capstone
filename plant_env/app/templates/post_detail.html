@@ -3,10 +3,9 @@
 
 {% block content %}
 
-<h1 class="text-center">{{ post.title }}</h1>
-<h5 class="text-center">By: {{ post.author }}</h5>
-<hr>
-<img src="{{ post.image_url }}" alt="" class="img-fluid mx-auto d-block">
-<p>{{ post.body }}</p>
+    <h1 class="text-center">{{ post.title }}</h1>
+    <hr>
+    <img src="{{ post.image_url }}" alt="" class="img-fluid mx-auto d-block">
+    <p>{{ post.body }}</p>
 
 {% endblock content %}

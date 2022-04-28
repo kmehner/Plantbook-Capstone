@@ -12,6 +12,14 @@ def index():
     posts = Post.query.all()
     return render_template('index.html', title=title, posts=posts)
 
+# Get A Single Post by ID
+@blog.route('/posts/<post_id>')
+@login_required
+def single_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    title = post.title
+    return render_template('post_detail.html', title=title, post=post)
+
 # ------------------- Plant Dictionary ----------------------
 ## No API for houseplants, so will be functioning off a user-created database 
 ## Routes: All plants (search_plants), plantdict_plant_info, register_plant, edit_plant, delete_plant
@@ -32,7 +40,7 @@ def search_plants():
     return render_template('all_plants.html', title=title, plants=plants, form=form, user_plants=user_plants)
 
 # PLANT DICT - PLANT INFO 
-@blog.route('/plant-info/<plant_id>' , methods=['GET', 'POST'])
+@blog.route('/plantdict-plant-info/<plant_id>' , methods=['GET', 'POST'])
 @login_required
 def plantdict_plant_info(plant_id):
     plant = Plant.query.get_or_404(plant_id)
@@ -302,14 +310,6 @@ def delete_post(post_id):
 #     posts = current_user.posts.all()
 #     return render_template('my_posts.html', title=title, posts=posts)
 
-# Get A Single Post by ID
-## Only needed if search-post route is called 
-# @blog.route('/posts/<post_id>')
-# @login_required
-# def single_post(post_id):
-#     post = Post.query.get_or_404(post_id)
-#     title = post.title
-#     return render_template('post_detail.html', title=title, post=post)
 
 # Get all posts that match search (need to update to new postform format, might not exist for a little)
 # @blog.route('/search-posts', methods=['GET', 'POST'])
