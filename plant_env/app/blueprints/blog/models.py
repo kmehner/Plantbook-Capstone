@@ -35,8 +35,8 @@ class Post(db.Model):
         return f"<Post|{self.title}>"
 
     def update(self, **kwargs):
-        for key, value in kwargs.items():
-            if key in {'title', 'body'}:
+        for key, value in kwargs.items(): # added update for new variables (watering_schedule)
+            if key in {'title', 'body', 'water_quantity', 'water_measurement', 'frequency_int', 'frequency_measurement'}:
                 setattr(self, key, value)
         db.session.commit()
 
