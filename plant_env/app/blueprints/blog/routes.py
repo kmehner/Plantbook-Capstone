@@ -72,15 +72,15 @@ def create_post(plant_id, category):
 
 
 
-@blog.route('/my-posts')
-@login_required
-def my_posts():
-    title = 'My Posts'
-    posts = current_user.posts.all()
-    return render_template('my_posts.html', title=title, posts=posts)
+# @blog.route('/my-posts')
+# @login_required
+# def my_posts():
+#     title = 'My Posts'
+#     posts = current_user.posts.all()
+#     return render_template('my_posts.html', title=title, posts=posts)
 
 
-# Get all posts that match search
+# Get all posts that match search (need to update to new postform format, might not exist for a little)
 @blog.route('/search-posts', methods=['GET', 'POST'])
 def search_posts():
     title = 'Search'
@@ -102,13 +102,15 @@ def single_post(post_id):
 
 
 # Edit a Single Post by ID
-@blog.route('/edit-posts/<post_id>/<category>/<plant>', methods=["GET", "POST"])
+@blog.route('/edit-posts/<post_id>/<plant>', methods=["GET", "POST"])
 @login_required
-def edit_post(post_id, category, plant):
+def edit_post(post_id, plant):
     post = Post.query.get_or_404(post_id)
+    category = post.category
+
     if post.author != current_user:
         flash('You do not have edit access to this post.', 'danger')
-        return redirect(url_for('blog.my_posts'))
+        return redirect(url_for('blog.plantbook_more_info', plant_id=post.plant_id, category=category))
     
     title = f"Edit post"
 
@@ -123,8 +125,8 @@ def edit_post(post_id, category, plant):
     
     if form.validate_on_submit():
         post.update(**form.data)
-        flash(f'The post has been updated', 'warning')
-
+        flash(f'The post has been updated', 'success')
+        return redirect(url_for('blog.plantbook_more_info', plant_id=post.plant_id, category=category))
 
     return render_template('post_edit.html', title=title, post=post, form=form, category=category, plant=plant)
 
@@ -138,7 +140,7 @@ def delete_post(post_id):
     else:
         post.delete()
         flash(f'{post.title} has been deleted.', 'secondary')
-    return redirect(url_for('blog.my_posts'))
+    return redirect(url_for('blog.plantbook_more_info', plant_id=post.plant_id, category=post.category))
 
 
 # ------------------- Plants ----------------------
@@ -213,11 +215,22 @@ def delete_plant(plant_id):
 
 # --------------- Plantbook ----------- (move inside base?)
 
-@blog.route('/my-plantbook')
+@blog.route('/my-plantbook', methods=['GET', 'POST'])
 @login_required
 def my_plantbook():
-    plants = current_user.plants.all()
-    return render_template('my_plantbook.html', plants=plants)
+    form = SearchForm()
+    user_plants = current_user.plants.all()
+    plants = user_plants
+
+    if form.validate_on_submit():
+        plants = []
+        term = form.search.data
+        plant_search = Plant.query.filter( (Plant.common_name.ilike(f'%{term}%')) | (Plant.scientific_name.ilike(f'%{term}%')) ).all()
+        for plant in plant_search:
+            if plant in user_plants:
+                plants.append(plant)
+
+    return render_template('my_plantbook.html', user_plants=user_plants, plants=plants, form=form)
 
 
 @blog.route('/add-to-my-plantbook/<plant_id>' , methods=['GET', 'POST'])

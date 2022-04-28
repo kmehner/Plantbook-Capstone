@@ -15,7 +15,7 @@
                     <p class="card-text">{{ p.frequency_int }}</p>
                     <p class="card-text">{{ p.frequency_measurement }}</p>
                     <div class="d-flex justify-content-end">
-                        <a href=" {{ url_for('blog.edit_post', post_id=p.id, category=p.category, plant=plant) }}" class="btn btn-success me-2"><span class="fas fa-edit"></span></a>
+                        <a href=" {{ url_for('blog.edit_post', post_id=p.id, plant=plant) }}" class="btn btn-success me-2"><span class="fas fa-edit"></span></a>
                         <button class="btn btn-danger" type="button"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ p.id }}"><span class="fas fa-trash-alt"></span></button>
                     </div>
                 </div>
@@ -24,11 +24,11 @@
         {% elif category == 'photo_diary' %}
             <div class="card mt-2">
                 <div class="card-body">
-                    <p class="card-text">{{ p.date_created }}></p>
+                    <p class="card-text">{{ p.date_created.strftime('%Y-%m-%d') }}></p>
                     <p class="card-img">{{ p.image }}</p>
                     <p class="card-img">{{ p.body }}</p>
                     <div class="d-flex justify-content-end">
-                        <a href=" {{ url_for('blog.edit_post', post_id=p.id, category=p.category, plant=plant) }}" class="btn btn-success me-2"><span class="fas fa-edit"></span></a>
+                        <a href=" {{ url_for('blog.edit_post', post_id=p.id, plant=plant) }}" class="btn btn-success me-2"><span class="fas fa-edit"></span></a>
                         <button class="btn btn-danger" type="button"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ p.id }}"><span class="fas fa-trash-alt"></span></button>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                     <p class="card-text">{{ p.body }}</p>
                     <p class="card-text">{{ p.image }}</p>
                     <div class="d-flex justify-content-end">
-                        <a href=" {{ url_for('blog.edit_post', post_id=p.id, category=p.category, plant=plant) }}" class="btn btn-success me-2"><span class="fas fa-edit"></span></a>
+                        <a href=" {{ url_for('blog.edit_post', post_id=p.id, plant=plant) }}" class="btn btn-success me-2"><span class="fas fa-edit"></span></a>
                         <button class="btn btn-danger" type="button"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ p.id }}"><span class="fas fa-trash-alt"></span></button>
                     </div>
                 </div>
