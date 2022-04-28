@@ -3,7 +3,7 @@
 
 {% block content %}
 
-    <div class="container text-center p-4">
+    <div class="container text-center pt-4">
         {% if current_user.is_authenticated %}
         <h3>Hello {{ current_user.username }}!</h3>
         {% else %}
@@ -15,7 +15,7 @@
 
         {% for p in posts %}
         <div class="col-12 col-md-6 col-lg-4">
-            <div class="card">
+            <div class="card mt-3">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{ p.title }}</h5>
                     <p class="card-title text-center">{{ p.body }}</p>

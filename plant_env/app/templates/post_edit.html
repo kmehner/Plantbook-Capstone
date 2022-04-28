@@ -1,25 +1,26 @@
 {% extends 'plantbook_base.html' %}
 
-
 {% block inner_content %}
 
 <div class="container">
     <div class="row">
         <div class="col"></div>
         <div class="col-8">
-            <h1>{{ title }}</h1>
+            <div class="d-flex justify-content-between">
+                <h1>{{ title }}</h1><a href=" {{ url_for('blog.plant_info', plant_id=plant_id) }}" class="btn fas fa-trash-alt btn-danger mt-2"></a>
+            </div>
 
             <form action="" method="post" enctype="multipart/form-data">
                 {{ form.csrf_token }}
 
                 {% if category=='watering_schedule' %}
                     <div class="form-group">
+
                     {{ form.water_quantity.label }}
                     {{ form.water_quantity(class='form-control', value=post.water_quantity) }}
 
                     {{ form.water_measurement.label }}
                     {{ form.water_measurement(class='form-control') }}
-
                     
                     {{ form.frequency_int.label }}
                     {{ form.frequency_int(class='form-control', value=post.frequency_int) }}

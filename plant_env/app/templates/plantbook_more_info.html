@@ -15,7 +15,7 @@
 
                     <div class="card mt-2">
                         <div class="card-body">
-                            <p class="card-text">{{ p.water_quantity }}></p>
+                            <p class="card-text">{{ p.water_quantity }}</p>
                             <p class="card-text">{{ p.water_measurement }}</p>
                             <p class="card-text">{{ p.frequency_int }}</p>
                             <p class="card-text">{{ p.frequency_measurement }}</p>
@@ -29,7 +29,7 @@
                 {% elif category == 'photo_diary' %}
                     <div class="card mt-2">
                         <div class="card-body">
-                            <p class="card-text">{{ p.date_created.strftime('%Y-%m-%d') }}></p>
+                            <p class="card-text">{{ p.date_created.strftime('%Y-%m-%d') }}</p>
                             <p class="card-img">{{ p.image }}</p>
                             <p class="card-img">{{ p.body }}</p>
                             <div class="d-flex justify-content-end">

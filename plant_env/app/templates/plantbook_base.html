@@ -6,11 +6,11 @@
     <!-- Treat this like inner-nav bar (can we extend twice?) -->
     <nav class="nav bg-dark navbar-dark break-out">
         <div class="navbar nav justify-content-end">
-          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plant_info', plant_id = plant.id) }}">Plant Info</a>
-          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plantbook_more_info', plant_id = plant.id, category='health_issues') }}">Health Issues</a>
-          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plantbook_more_info', plant_id = plant.id, category='watering_schedule') }}">Watering Schedule</a>
-          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plantbook_more_info', plant_id = plant.id, category='soil_mix') }}">Soil Mix</a>
-          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plantbook_more_info', plant_id = plant.id, category='photo_diary') }}">Photo Diary</a>
+          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plant_info', plant_id = g.plant_id) }}">Plant Info</a>
+          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plantbook_more_info', plant_id = g.plant_id, category='health_issues') }}">Health Issues</a>
+          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plantbook_more_info', plant_id = g.plant_id, category='watering_schedule') }}">Watering Schedule</a>
+          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plantbook_more_info', plant_id = g.plant_id, category='soil_mix') }}">Soil Mix</a>
+          <a class="nav-item nav-link link-light active" href="{{ url_for('blog.plantbook_more_info', plant_id = g.plant_id, category='photo_diary') }}">Photo Diary</a>
 
         </div>
     </nav>

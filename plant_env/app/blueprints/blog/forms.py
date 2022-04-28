@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, FileField, IntegerField, SelectMultipleField
+from wtforms import StringField, SubmitField, FileField, IntegerField, SelectField
 from wtforms.validators import DataRequired
 
 
@@ -30,16 +30,16 @@ class HealthForm(FlaskForm):
 
 class WaterForm(FlaskForm):
     water_quantity = IntegerField('Water Quantity', validators=[DataRequired()])
-    water_measurement = SelectMultipleField('Water Measurement', choices=[
-                                 'C++', 
-                                 'Python', 
-                                 'Plain Text',
-                               ])
-    frequency_int = IntegerField('Frequency', validators=[DataRequired()])
-    frequency_measurement = SelectMultipleField('Frequency Measurement', validators=[DataRequired()], choices=[
+    water_measurement = SelectField('Water Measurement', choices=[
                                  ('cpp', 'C++'), 
                                  ('py', 'Python'), 
                                  ('text', 'Plain Text')
+                               ])
+    frequency_int = IntegerField('Frequency', validators=[DataRequired()])
+    frequency_measurement = SelectField('Frequency Measurement', validators=[DataRequired()], choices=[
+                                 ('C++', 'C++'), 
+                                 ('Python', 'Python'), 
+                                 ('Plain Text', 'Plain Text')
                                ])
     submit = SubmitField('Create')
 

@@ -1,6 +1,6 @@
 from numpy import add_newdoc
 from . import blog
-from flask import redirect, render_template, url_for, flash
+from flask import redirect, render_template, url_for, flash, g
 from flask_login import login_required, current_user
 from .forms import HealthForm, PhotoForm, PostForm, SearchForm, PlantForm, WaterForm
 from .models import Plant, PlantBook, Post
@@ -107,10 +107,11 @@ def single_post(post_id):
 def edit_post(post_id, plant):
     post = Post.query.get_or_404(post_id)
     category = post.category
-
+    plant_id = post.plant_id
+    g.plant_id = plant_id
     if post.author != current_user:
         flash('You do not have edit access to this post.', 'danger')
-        return redirect(url_for('blog.plantbook_more_info', plant_id=post.plant_id, category=category))
+        return redirect(url_for('blog.plantbook_more_info', plant_id=plant_id, category=category))
     
     title = f"Edit post"
 
@@ -126,11 +127,11 @@ def edit_post(post_id, plant):
     if form.validate_on_submit():
         post.update(**form.data)
         flash(f'The post has been updated', 'success')
-        return redirect(url_for('blog.plantbook_more_info', plant_id=post.plant_id, category=category))
+        return redirect(url_for('blog.plantbook_more_info', plant_id=plant_id, category=category))
 
-
-    return render_template('post_edit.html', title=title, post=post, form=form, category=category, plant=plant)
-
+    print(plant_id, "Plant ID")
+    return render_template('post_edit.html', title=title, post=post, form=form, category=category, plant=plant, plant_id=plant_id)
+    
 
 @blog.route('/delete-posts/<post_id>')
 @login_required
@@ -202,7 +203,7 @@ def search_plants():
         plants = Plant.query.filter( (Plant.common_name.ilike(f'%{term}%')) | (Plant.scientific_name.ilike(f'%{term}%')) ).all()
     return render_template('all_plants.html', title=title, plants=plants, form=form, user_plants=user_plants)
 
-@blog.route('/edit-plants/<plant_id>', methods=["GET", "POST"])
+@blog.route('/edit-plants/<int:plant_id>', methods=["GET", "POST"])
 @login_required
 def edit_plant(plant_id):
     plant = Plant.query.get_or_404(plant_id)
@@ -289,6 +290,7 @@ def plantbook_home(plant_id):
 @login_required
 def plant_info(plant_id):
     plant = Plant.query.get_or_404(plant_id)
+    g.plant_id = plant_id
     return render_template("plant_info.html", plant=plant)
 
 
@@ -300,6 +302,7 @@ def plantbook_more_info(plant_id, category):
  
     plant = Plant.query.get_or_404(plant_id)
     plant_id = plant_id
+    g.plant_id = plant_id
     # current_user
     current_user_id = current_user.id
     # category 
