@@ -3,53 +3,61 @@
 
 {% block inner_content %}
 
-<h1>{{ title }}</h1>
+<div class="container">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-8">
+            <h1>{{ title }}</h1>
 
-<form action="" method="post" enctype="multipart/form-data">
-    {{ form.csrf_token }}
+            <form action="" method="post" enctype="multipart/form-data">
+                {{ form.csrf_token }}
 
-    {% if category=='watering_schedule' %}
-        <div class="form-group">
-        {{ form.water_quantity.label }}
-        {{ form.water_quantity(class='form-control', value=post.water_quantity) }}
+                {% if category=='watering_schedule' %}
+                    <div class="form-group">
+                    {{ form.water_quantity.label }}
+                    {{ form.water_quantity(class='form-control', value=post.water_quantity) }}
 
-        {{ form.water_measurement.label }}
-        {{ form.water_measurement(class='form-control') }}
+                    {{ form.water_measurement.label }}
+                    {{ form.water_measurement(class='form-control') }}
 
-        
-        {{ form.frequency_int.label }}
-        {{ form.frequency_int(class='form-control', value=post.frequency_int) }}
+                    
+                    {{ form.frequency_int.label }}
+                    {{ form.frequency_int(class='form-control', value=post.frequency_int) }}
 
-        {{ form.frequency_measurement.label }}
-        {{ form.frequency_measurement(class='form-control') }} 
+                    {{ form.frequency_measurement.label }}
+                    {{ form.frequency_measurement(class='form-control') }} 
 
-        {{ form.submit(class='btn btn-outline-primary w-100') }}
+                    {{ form.submit(class='btn btn-outline-primary mt-3 w-100') }}
+                    </div>
+
+                {% elif category=='photo_diary' %}
+                    <div class="form-group">
+
+                    <p>Please CHOOSE the Image you would like to add</p>
+                    {{ form.image (class="mt-3")}}
+
+                    {{ form.body(class='form-control', value=post.body) }}
+
+                    {{ form.submit(class='btn btn-outline-primary mt-3 w-100') }}
+                    </div>
+
+                {% else %}
+                <div class="form-group">
+                    {{ form.title.label }}
+                    {{ form.title(class='form-control', value=post.title) }}
+                    
+                    {{ form.body.label }}
+                    {{ form.body(class='form-control', value=post.body) }}
+
+                    {{ form.image (class="mt-3")}}
+                    
+                    {{ form.submit(class='btn btn-outline-primary mt-3 w-100') }}
+                </div>
+                {% endif %}
+            </form>
         </div>
-
-    {% elif category=='photo_diary' %}
-        <div class="form-group">
-
-        <p>Please CHOOSE the Image you would like to add</p>
-        {{ form.image }}
-
-        {{ form.body(class='form-control', value=post.body) }}
-
-        {{ form.submit(class='btn btn-outline-primary w-100') }}
-        </div>
-
-    {% else %}
-    <div class="form-group">
-        {{ form.title.label }}
-        {{ form.title(class='form-control', value=post.title) }}
-        
-        {{ form.body.label }}
-        {{ form.body(class='form-control', value=post.body) }}
-
-        {{ form.image }}
-        
-        {{ form.submit(class='btn btn-outline-primary w-100') }}
+        <div class="col"></div>
     </div>
-    {% endif %}
-</form>
+</div>
 
 {% endblock inner_content %}

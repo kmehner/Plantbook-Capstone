@@ -2,24 +2,32 @@
 
 {% block content %}
 
-<h1>Register a Plant</h1>
+<div class="container">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-8">
+            <h1 class="mt-3">{{ title }}</h1>
 
-<form action="" method="post" enctype="multipart/form-data">
-    {{ form.csrf_token }}
-    <div class="form-group">
-        {{ form.common_name.label }}
-        {{ form.common_name(class='form-control', placeholder='Common Name') }}
-        
-        {{ form.scientific_name.label }}
-        {{ form.scientific_name(class='form-control', placeholder='scientific Name') }}
+            <form action="" method="post" enctype="multipart/form-data">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    {{ form.common_name.label }}
+                    {{ form.common_name(class='form-control', placeholder='Common Name') }}
+                    
+                    {{ form.scientific_name.label }}
+                    {{ form.scientific_name(class='form-control', placeholder='Scientific Name') }}
 
-        {{ form.content.label }}
-        {{ form.content(class='form-control', placeholder='Content') }}
+                    {{ form.content.label }}
+                    {{ form.content(class='form-control', placeholder='Content') }}
 
-        {{ form.image }}
-        
-        {{ form.submit(class='btn btn-outline-primary w-100') }}
+                    {{ form.image (class='mt-3')}}
+                    
+                    {{ form.submit(class='btn btn-outline-primary mt-3 w-100') }}
+                </div>
+            </form>
+        </div>
+        <div class="col"></div>
     </div>
-</form>
+</div>
 
 {% endblock content %}

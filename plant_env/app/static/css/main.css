@@ -1,3 +1,12 @@
+body {
+	font-family: 'Open Sans', sans-serif;
+}
+
+nav img{
+    width: 8%;
+}
+
+
 .break-out{
     width: 100vw;
     position: relative;

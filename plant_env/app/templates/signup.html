@@ -2,23 +2,32 @@
 
 
 {% block content %}
-    <h1>Sign Up</h1>
-    <form method="post">
-        {{ form.csrf_token }}
-        <div class="form-group">
-            {{ form.email.label }}
-            {{ form.email(class='form-control', placeholder='Email') }}
-
-            {{ form.username.label }}
-            {{ form.username(class='form-control', placeholder='Username') }}
-
-            {{ form.password.label }}
-            {{ form.password(class='form-control', placeholder='Password') }}
-
-            {{ form.confirm_pass.label }}
-            {{ form.confirm_pass(class='form-control', placeholder='Confirm Password') }}
-
-            {{ form.submit(class='btn btn-primary w-100') }}
+    <div class="container">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-8">
+                <form method="post">
+                    {{ form.csrf_token }}
+                    <div class="form-group mt-3">
+                        <h1>Sign Up</h1>
+                        {{ form.email.label }}
+                        {{ form.email(class='form-control', placeholder='Email') }}
+            
+                        {{ form.username.label }}
+                        {{ form.username(class='form-control', placeholder='Username') }}
+            
+                        {{ form.password.label }}
+                        {{ form.password(class='form-control', placeholder='Password') }}
+            
+                        {{ form.confirm_pass.label }}
+                        {{ form.confirm_pass(class='form-control', placeholder='Confirm Password') }}
+            
+                        {{ form.submit(class='btn btn-primary mt-3') }}
+                    </div>
+                </form>
+            </div>
+            <div class="col"></div>
         </div>
-    </form>
+
+    </div>
 {% endblock content %}  

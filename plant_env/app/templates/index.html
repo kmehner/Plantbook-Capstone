@@ -3,11 +3,13 @@
 
 {% block content %}
 
-    {% if current_user.is_authenticated %}
-    <h1>Hello {{ current_user.username }}!</h1>
-    {% else %}
-    <h1>Hello please sign up to use our blog</h1>
-    {% endif %}
+    <div class="container text-center p-4">
+        {% if current_user.is_authenticated %}
+        <h3>Hello {{ current_user.username }}!</h3>
+        {% else %}
+        <h3>Hello! Please Sign Up or Login</h3>
+        {% endif %}
+    </div>
 
     <div class="row">
 
@@ -16,12 +18,12 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{ p.title }}</h5>
-                    <h5 class="card-title text-center">{{ p.body }}</h5>
-                    <h5 class="card-title text-center">{{ p.category }}</h5>
+                    <p class="card-title text-center">{{ p.body }}</p>
+                    <!-- Display category img based on category -->
+                    <p class="card-title text-center">{{ p.category }}(FIX)</p>
                     <div class="d-flex justify-content-center">
-                        <cite>&mdash; {{ p.author }}</cite>
+                    <a href="{{ url_for('blog.single_post', post_id=p.id) }}" class="btn btn-primary w-50">More Info</a>
                     </div>
-                    <a href="{{ url_for('blog.single_post', post_id=p.id) }}" class="btn btn-primary w-100">More Info</a>
                 </div>
             </div>
         </div>

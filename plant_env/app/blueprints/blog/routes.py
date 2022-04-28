@@ -128,6 +128,7 @@ def edit_post(post_id, plant):
         flash(f'The post has been updated', 'success')
         return redirect(url_for('blog.plantbook_more_info', plant_id=post.plant_id, category=category))
 
+
     return render_template('post_edit.html', title=title, post=post, form=form, category=category, plant=plant)
 
 
@@ -154,19 +155,25 @@ def all_plants():
 # ------------ Plant database functionality ------------
 
 # Will be backend way to edit plant (no user_id attached to plant so whoever has access to this can edit/delete)
-@blog.route('/my-plants')
+@blog.route('/my-plants', methods=['GET', 'POST'])
 @login_required
 def my_plants():
     title = 'My Plants'
+    form = SearchForm()
     plants = Plant.query.all()
-    return render_template('my_plants.html', title=title, plants=plants)
+
+    if form.validate_on_submit():
+        term = form.search.data
+        plants = Plant.query.filter( (Plant.common_name.ilike(f'%{term}%')) | (Plant.scientific_name.ilike(f'%{term}%')) ).all()
+
+    return render_template('my_plants.html', title=title, plants=plants, form=form)
 
 
 @blog.route('/register-plant', methods=['GET', 'POST'])
 @login_required
 def register_plant():
-    title = 'Register a plant'
     form = PlantForm()
+    title = 'Register New Plant'
     if form.validate_on_submit():
         common_name = form.common_name.data
         scientific_name = form.scientific_name.data
@@ -185,12 +192,15 @@ def search_plants():
     title = 'Search'
     form = SearchForm()
     plants = Plant.query.all()
-    # NOT DONE - if plant in current user plantbook, do not display
-    current_user_plants = current_user.plants.all()
+
+    # for plant in plants, if plant in user_plants display quantity
+    # plantbook.count(plant)? * still figuring this out 
+    user_plants = current_user.plants.all()
+
     if form.validate_on_submit():
         term = form.search.data
         plants = Plant.query.filter( (Plant.common_name.ilike(f'%{term}%')) | (Plant.scientific_name.ilike(f'%{term}%')) ).all()
-    return render_template('all_plants.html', title=title, plants=plants, form=form)
+    return render_template('all_plants.html', title=title, plants=plants, form=form, user_plants=user_plants)
 
 @blog.route('/edit-plants/<plant_id>', methods=["GET", "POST"])
 @login_required
