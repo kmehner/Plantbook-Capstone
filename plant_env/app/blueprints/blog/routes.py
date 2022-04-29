@@ -1,3 +1,4 @@
+from requests import post
 from . import blog
 from app import db
 from flask import redirect, render_template, url_for, flash, g
@@ -214,12 +215,21 @@ def plantbook_more_info(plant_id, category):
     category=category
 
     # Query for posts you want 
-    # posts = Post.query.filter( Post.plant_id == plant_id, Post.user_id == current_user_id, Post.category == category).all()
-    posts = db.session.query(Post).join(Bookmark).filter(Post.plant_id == plant_id, Post.category==category).filter((Post.user_id == current_user.id) | (Bookmark.user_id == current_user.id) ).all()
-    print(posts, "posts")
+    posts = Post.query.filter( Post.plant_id == plant_id, Post.user_id == current_user_id, Post.category == category).all()
+
+    # add_bookmarks = Bookmark.query.filter(Bookmark.user_id == current_user.id).all()
+    
+    # for bookmark in add_bookmarks:
+    #     post_id = bookmark.post_id
+    #     bookmark_to_add = Post.query.filter(Post.id == post_id).first()
+    #     if bookmark_to_add not in posts:
+    #         posts.append(bookmark_to_add)
+
+    # Had trouble getting the join table to work (fine for health_issues but not others)
+    # posts = db.session.query(Post).join(Bookmark).filter(Post.plant_id == plant_id, Post.category==category).filter((Post.user_id == current_user.id) | (Bookmark.user_id == current_user.id) ).all()
     
     # Return render_template for basic display 
-    return render_template(f'plantbook_more_info.html', plant=plant, posts=posts, category=category)
+    return render_template(f'plantbook_more_info.html', plant=plant, plant_id=plant.id, posts=posts, category=category)
 
 # BOOKMARK POST
 @blog.route('/bookmark-post/<post_id>', methods=["GET", "POST"])
@@ -229,6 +239,8 @@ def bookmark_post(post_id):
 
     if post in current_user.bookmarks:
         flash("This post is already saved to your bookmarks!", 'danger')
+    elif current_user.id == post.user_id:
+        flash("You cannot bookmark your own post", 'danger')
     else:
         new_bookmark = Bookmark(post_id = post_id, user_id = current_user.id)
         flash("A new bookmark has been saved!", "success")
@@ -240,14 +252,14 @@ def bookmark_post(post_id):
 def delete_bookmark(post_id):
    
     post = Post.query.get_or_404(post_id)
-    post_id = post.id
-    bookmark = Bookmark.query.get_or_404(post_id)
+
+    bookmark = Bookmark.query.filter(Bookmark.user_id==current_user.id, Bookmark.post_id == post_id).first()
 
     bookmark.delete()
     flash("The bookmark has successfully been removed", "success")
     
     # Needs to redirect to another page
-    return redirect(url_for('index'))
+    return redirect(url_for('blog.plantbook_more_info'), plant_id = post.plant_id, category = post.category )
 
 
 # CREATE POST

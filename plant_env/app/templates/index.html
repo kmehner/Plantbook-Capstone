@@ -30,13 +30,13 @@
                 <div class="col-8">
                     <div class="card mt-3">
                         <div class="card-body">
-                            <h5 class="card-title text-center">Watering Schedule</h5>
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title text-center">Watering Schedule</h5>
+                                <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn w-25"><span class="fas fa-bookmark"></span></a>
+                            </div>
                             <div class="card-title text-center">
                                 <p>{{p.water_quantity}} {{p.water_measurement}} of water</p>
                                 <p>Every {{p.frequency_int}} {{p.frequency_measurement}}</p>
-                            </div>
-                            <div class="d-flex justify-content-center">
-                            <a href="{{ url_for('blog.single_post', post_id=p.id) }}" class="btn btn-primary w-50">More Info</a>
                             </div>
                         </div>
                     </div>
@@ -45,12 +45,12 @@
                 <div class="col-8 m-0">
                     <div class="card mt-3">
                         <div class="card-body">
-                            <h5 class="card-title text-center">{{ p.title }}</h5>
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title text-center">{{ p.title }}</h5>
+                                <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn w-25"><span class="fas fa-bookmark"></span></a>
+                            </div>
                             <p class="card-title text-center">{{ p.body }}</p>
                             <!-- Display category img based on category -->
-                            <div class="d-flex justify-content-center">
-                            <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn btn-primary w-50">Bookmark</a>
-                            </div>
                         </div>
                     </div>
                 </div>
