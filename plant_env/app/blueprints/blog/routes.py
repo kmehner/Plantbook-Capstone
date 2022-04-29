@@ -34,7 +34,8 @@ def index():
             posts = db.session.query(Post).join(Plant).filter(Post.plant_id == Plant.id).filter(Plant.id == plant.id).all()
         else:
             posts = db.session.query(Post).join(Plant).filter(Post.category==category_to_filter).filter(Post.plant_id == plant.id).all()
-        return render_template('index.html', posts=posts, form=form)
+            # If posts = [], there are no posts that match the search options 
+        return render_template('index.html', posts=posts, form=form, title=title)
 
     return render_template('index.html', title=title, posts=posts, form = form)
 
@@ -102,8 +103,8 @@ def register_plant():
         image_url = form.image.data
         # Image Error: Cannot adapt filetype to image
         new_plant = Plant(common_name=common_name, scientific_name=scientific_name, content=content)
-        # if image:
-        #     new_plant.upload_to_cloudinary(image)
+        if image_url:
+            new_plant.upload_to_cloudinary(image_url)
         flash(f"{new_plant.common_name} has been created", 'secondary')
         return redirect(url_for('blog.search_plants'))
     return render_template('register_plant.html', title=title, form=form)
@@ -233,10 +234,10 @@ def create_post(plant_id, category):
         if form.validate_on_submit():
             title = form.title.data
             body = form.body.data
-            image = form.image.data
+            image_url = form.image.data
             new_post = Post(title=title, body=body, user_id=current_user.id, category=category, plant_id=plant_id)
-            if image:
-                new_post.upload_to_cloudinary(image)
+            if image_url:
+                new_post.upload_to_cloudinary(image_url)
             flash(f"{new_post.title} has been created", 'secondary')
             return redirect(url_for('blog.plantbook_more_info', plant_id = plant_id, category=category))
 

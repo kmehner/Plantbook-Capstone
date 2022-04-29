@@ -1,15 +1,15 @@
 from app import db
 from datetime import datetime
 import os
-# import cloudinary
-# import cloudinary.uploader
-# import cloudinary.api
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
-# cloudinary.config(
-#     cloud_name=os.environ.get('CLOUDINARY_NAME'),
-#     api_key=os.environ.get('CLOUDINARY_API_KEY'),
-#     api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
-# )
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUDINARY_NAME'),
+    api_key=os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
+)
 
 
 class Post(db.Model):
@@ -41,13 +41,20 @@ class Post(db.Model):
         db.session.commit()
 
     def delete(self):
+        if self.image_url:
+            self.delete_from_cloudinary
         db.session.delete(self)
         db.session.commit()
 
-    # def upload_to_cloudinary(self, file_to_upload):
-    #     image_info = cloudinary.uploader.upload(file_to_upload)
-    #     self.image_url = image_info.get('url')
-    #     db.session.commit()
+    def upload_to_cloudinary(self, file_to_upload):
+        image_info = cloudinary.uploader.upload(file_to_upload)
+        self.image_url = image_info.get('url')
+        db.session.commit()
+
+    def delete_from_cloudinary(self):
+        p_id = self.image_url.split('/')[-1].split('.')[0]
+        cloudinary.uploader.destroy(p_id)
+        db.session.commit()
 
 
 # need to remove unique constraint - error but is created 
@@ -75,8 +82,19 @@ class Plant(db.Model):
         db.session.commit()
 
     def delete(self):
+        if self.image_url:
+            self.delete_from_cloudinary
         db.session.delete(self)
         db.session.commit()
+
+    def upload_to_cloudinary(self, file_to_upload):
+        image_info = cloudinary.uploader.upload(file_to_upload)
+        self.image_url = image_info.get('url')
+        db.session.commit()
+
+    def delete_from_cloudinary(self):
+        p_id = self.image_url.split('/')[-1].split('.')[0]
+        cloudinary.uploader.destroy(p_id)
 
 
 # Bookmark Plant class here 
