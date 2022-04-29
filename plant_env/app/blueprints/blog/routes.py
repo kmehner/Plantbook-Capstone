@@ -4,7 +4,7 @@ from app import db
 from flask import redirect, render_template, url_for, flash, g
 from flask_login import login_required, current_user
 from .forms import HealthForm, PhotoForm, PostForm, SearchForm, PlantForm, WaterForm, FilterForm
-from .models import Bookmark, Plant, PlantBook, Post
+from .models import Bookmark, Plant, PlantBook, Post, Bookmarks
 
 # ----------- Home Page -----------
 # Add upvote feature, comment feature, and filter (using join table)
@@ -19,23 +19,27 @@ def index():
     # Filter by Category
     form = FilterForm()
     
-
+    # Filter for the data
     if form.validate_on_submit():
+        plant = None
         category_to_filter = form.category_to_filter.data
+        print(category_to_filter, "plant_to_filter")
         plant_to_filter = form.plant_to_filter.data
         print(plant_to_filter, "plant_to_filter")
-        plant = Plant.query.filter( (Plant.common_name.ilike(f'%{plant_to_filter}%')) | (Plant.scientific_name.ilike(f'%{plant_to_filter}%')) ).first()
-        print(plant, "plant")
+        if plant_to_filter != "":
+            plant = Plant.query.filter( (Plant.common_name.ilike(f'%{plant_to_filter}%')) | (Plant.scientific_name.ilike(f'%{plant_to_filter}%')) ).first()
+            print(plant, "plant")
 
-        if category_to_filter == 'no_filter' and plant == None:
+        if plant is None and plant_to_filter and category_to_filter == 'no_filter': # No filter, no plant_to_filter
+            posts = []
+        elif category_to_filter == 'no_filter' and plant is None: # No filter, no plant
             posts = Post.query.all()
-        elif plant == None and category_to_filter != 'no_filter':
-            posts = db.session.query(Post).join(Plant).filter(Post.category==category_to_filter).all()
-        elif category_to_filter == 'no_filter' and plant != None:
+        elif category_to_filter == 'no_filter' and plant!= None: # No filter, plant entered 
             posts = db.session.query(Post).join(Plant).filter(Post.plant_id == Plant.id).filter(Plant.id == plant.id).all()
-        else:
+        elif category_to_filter != 'no_filter' and plant is None: # Category but no plant 
+            posts = Post.query.filter(Post.category==category_to_filter).all()
+        else: # Category and plant entered
             posts = db.session.query(Post).join(Plant).filter(Post.category==category_to_filter).filter(Post.plant_id == plant.id).all()
-            # If posts = [], there are no posts that match the search options 
         return render_template('index.html', posts=posts, form=form, title=title)
 
     return render_template('index.html', title=title, posts=posts, form = form)
@@ -220,10 +224,14 @@ def plantbook_more_info(plant_id, category):
     # add_bookmarks = Bookmark.query.filter(Bookmark.user_id == current_user.id).all()
     
     # for bookmark in add_bookmarks:
-    #     post_id = bookmark.post_id
-    #     bookmark_to_add = Post.query.filter(Post.id == post_id).first()
-    #     if bookmark_to_add not in posts:
-    #         posts.append(bookmark_to_add)
+    #     for post in posts:
+    #         if bookmark.id == post.id and bookmark not in posts:
+    #             bookmark_to_add = Post.query.filter(Post.id == bookmark.id).first()
+    #             posts.append(bookmark_to_add)
+        # post_id = bookmark.post_id
+        # bookmark_to_add = Post.query.filter(Post.id == post_id)
+        # if bookmark_to_add not in posts:
+        #     posts.append(bookmark)
 
     # Had trouble getting the join table to work (fine for health_issues but not others)
     # posts = db.session.query(Post).join(Bookmark).filter(Post.plant_id == plant_id, Post.category==category).filter((Post.user_id == current_user.id) | (Bookmark.user_id == current_user.id) ).all()
@@ -237,12 +245,12 @@ def plantbook_more_info(plant_id, category):
 def bookmark_post(post_id):
     post = Post.query.get_or_404(post_id)
 
-    if post in current_user.bookmarks:
-        flash("This post is already saved to your bookmarks!", 'danger')
-    elif current_user.id == post.user_id:
+    # if post.id == current_user.id:
+    #     flash("This post is already saved to your bookmarks!", 'danger')
+    if current_user.id == post.user_id:
         flash("You cannot bookmark your own post", 'danger')
     else:
-        new_bookmark = Bookmark(post_id = post_id, user_id = current_user.id)
+        new_bookmark = Bookmarks(post_id = post_id, user_id = current_user.id)
         flash("A new bookmark has been saved!", "success")
     return redirect(url_for('index'))
 
@@ -251,9 +259,9 @@ def bookmark_post(post_id):
 @login_required
 def delete_bookmark(post_id):
    
-    post = Post.query.get_or_404(post_id)
+    post = Post.query.filter(Post.id == post_id).first()
 
-    bookmark = Bookmark.query.filter(Bookmark.user_id==current_user.id, Bookmark.post_id == post_id).first()
+    bookmark = Bookmarks.query.filter(Bookmarks.user_id==current_user.id, Bookmarks.post_id == post_id).first()
 
     bookmark.delete()
     flash("The bookmark has successfully been removed", "success")

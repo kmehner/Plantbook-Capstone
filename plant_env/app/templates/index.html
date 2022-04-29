@@ -5,25 +5,35 @@
 <div class="container mt-3">
     <div class="row d-flex justify-content-end">
         {% if current_user.is_authenticated %}
-        <div class="col-4" id="filter-container">
-            <form method="post" enctype="multipart/form-data">
-                {{ form.csrf_token }}
-            
-                    <div class="form-group">
-                    {{ form.plant_to_filter.label }}
-                    {{ form.plant_to_filter(class='form-control', placeholder='Enter Plant to Search') }}
+            <div class="col-4" id="filter-container">
+                <form method="post" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+                
+                        <div class="form-group">
+                        {{ form.plant_to_filter.label }}
+                        {{ form.plant_to_filter(class='form-control', placeholder='Enter Plant to Search') }}
 
-                    {{ form.category_to_filter.label }}
-                    {{ form.category_to_filter(class='form-control') }}
-            
-                    {{ form.submit(class='btn btn-outline-dark mt-3 w-100') }}
-                    </div>
-            </form>
-        </div>
+                        {{ form.category_to_filter.label }}
+                        {{ form.category_to_filter(class='form-control') }}
+                
+                        {{ form.submit(class='btn btn-outline-dark mt-3 w-100') }}
+                        </div>
+                </form>
+            </div>
 
         {% else %}
-        <h3>Hello! Please Sign Up or Login</h3>
+            <h3>Hello! Please Sign Up or Login</h3>
         {% endif %}
+
+        {% if posts == [] %}
+            <div class="col-8">
+                <div class="card-mt-3">
+                    <div class="card-body">
+                        <div class="card-title"><h3>There are no plants that match your search</h3></div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
         
         {% for p in posts %}
             {% if p.category == "watering_schedule" %}
@@ -38,6 +48,24 @@
                                 <p>{{p.water_quantity}} {{p.water_measurement}} of water</p>
                                 <p>Every {{p.frequency_int}} {{p.frequency_measurement}}</p>
                             </div>
+                            <div class="d-flex justify-content-center">
+                                <img src="{{ p.image_url }}" alt="" class="img-fluid w-100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% elif p.category == "photo_diary" %}
+                <div class="col-8 m-0">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <p class="card-title text-center">Photo Diary Entry</p>
+                                <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn w-25"><span class="fas fa-bookmark"></span></a>
+                            </div>
+                            <p class="card-title text-center">{{ p.body }}</p>
+                            <div class="d-flex justify-content-center">
+                                <img src="{{ p.image_url }}" alt="" class="img-fluid w-100">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -50,12 +78,16 @@
                                 <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn w-25"><span class="fas fa-bookmark"></span></a>
                             </div>
                             <p class="card-title text-center">{{ p.body }}</p>
+                            <div class="d-flex justify-content-center">
+                                <img src="{{ p.image_url }}" alt="" class="img-fluid w-100">
+                            </div>
                             <!-- Display category img based on category -->
                         </div>
                     </div>
                 </div>
             {% endif %}
         {% endfor %}
+        {% endif %}
 
     </div>
 </div>  

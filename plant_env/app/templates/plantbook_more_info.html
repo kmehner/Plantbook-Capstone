@@ -36,7 +36,9 @@
                     <div class="card mt-2">
                         <div class="card-body">
                             <p class="card-text">{{ p.date_created.strftime('%Y-%m-%d') }}</p>
-                            <p class="card-img">{{ p.image }}</p>
+                            <div class="d-flex justify-content-center">
+                                <img src="{{ p.image_url }}" alt="" class="img-fluid w-100">
+                            </div>
                             <p class="card-img">{{ p.body }}</p>
                             <div class="d-flex justify-content-end">
                                 {% if current_user.id == p.user_id %}

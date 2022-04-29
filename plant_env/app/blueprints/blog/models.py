@@ -5,6 +5,7 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
+
 cloudinary.config(
     cloud_name=os.environ.get('CLOUDINARY_NAME'),
     api_key=os.environ.get('CLOUDINARY_API_KEY'),
@@ -122,6 +123,20 @@ class Bookmark(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+class Bookmarks(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    post_id = db.Column(db.Integer)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
