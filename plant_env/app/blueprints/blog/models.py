@@ -24,7 +24,7 @@ class Post(db.Model):
     plant_id = db.Column(db.Integer, db.ForeignKey('plant.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    image_url = db.Column(db.String(100), default='https://via.placeholder.com/500')
+    image_url = db.Column(db.String(100))
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -35,7 +35,7 @@ class Post(db.Model):
         return f"<Post|{self.title}>"
 
     def update(self, **kwargs):
-        for key, value in kwargs.items(): # added update for new variables (watering_schedule)
+        for key, value in kwargs.items(): # added update for new variables 
             if key in {'title', 'body', 'water_quantity', 'water_measurement', 'frequency_int', 'frequency_measurement'}:
                 setattr(self, key, value)
         db.session.commit()
@@ -58,7 +58,7 @@ class Plant(db.Model):
     content = db.Column(db.String(200))
     posts = db.relationship('Post', backref='plant', lazy='dynamic')
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    image_url = db.Column(db.String(100), default='https://via.placeholder.com/500')
+    image_url = db.Column(db.String(100))
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

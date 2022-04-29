@@ -14,14 +14,11 @@ def index():
     # Filter by Category
     form = CategoryForm()
 
-    print(form.errors)
-
     if form.validate_on_submit():
         category_to_filter = form.category_to_filter.data
-        # if category_to_filter != 'no_filter':
-        # posts = Post.query.filter(Post.category == category_to_filter)
-        posts = Post.query.filter(Post.category.ilike(f'%{category_to_filter}%'))
-        return render_template('index.html', title=title, posts=posts, form = form)
+        if category_to_filter != 'no_filter':
+            posts = Post.query.filter(Post.category == category_to_filter).all()
+        return render_template('index.html', posts=posts, form=form)
 
     return render_template('index.html', title=title, posts=posts, form = form)
 
