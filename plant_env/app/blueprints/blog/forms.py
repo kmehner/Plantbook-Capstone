@@ -53,9 +53,10 @@ class PhotoForm(FlaskForm):
 
 class CategoryForm(FlaskForm):
     category_to_filter = SelectField('Category', choices=[
-                                 ('health_issues': 'Health Issue'),
-                                 ('watering_schedule': 'Watering Schedule'),
-                                 ('soil_mix:'Soil Mix'),
-                                 ('photo_diary': 'Photo Diary'),
-                               ])
+                                 ('no_filter', 'No Filter'),
+                                 ('health_issues', 'Health Issue'),
+                                 ('watering_schedule', 'Watering Schedule'),
+                                 ('soil_mix','Soil Mix'),
+                                 ('photo_diary', 'Photo Diary')
+                                 ])
     submit = SubmitField('Filter')

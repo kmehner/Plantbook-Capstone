@@ -12,8 +12,8 @@
 
     <div class="row">
         <div class="form-group">
-            <form action="" class="post" enctype="multipart/form-data">
             {{ form.csrf_token }}
+            <form class="post" enctype="multipart/form-data">
 
             {{ form.category_to_filter.label }}
             {{ form.category_to_filter(class='form-control') }} 
@@ -48,7 +48,7 @@
                             <h5 class="card-title text-center">{{ p.title }}</h5>
                             <p class="card-title text-center">{{ p.body }}</p>
                             <!-- Display category img based on category -->
-                            <p class="card-title text-center">{{ p.category }}(FIX)</p>
+                            <p class="card-title text-center">{{ p.category }}</p>
                             <div class="d-flex justify-content-center">
                             <a href="{{ url_for('blog.single_post', post_id=p.id) }}" class="btn btn-primary w-50">More Info</a>
                             </div>
