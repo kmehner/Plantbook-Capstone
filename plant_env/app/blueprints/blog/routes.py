@@ -1,23 +1,39 @@
 from . import blog
+from app import db
 from flask import redirect, render_template, url_for, flash, g
 from flask_login import login_required, current_user
-from .forms import HealthForm, PhotoForm, PostForm, SearchForm, PlantForm, WaterForm, CategoryForm
+from .forms import HealthForm, PhotoForm, PostForm, SearchForm, PlantForm, WaterForm, FilterForm
 from .models import Plant, PlantBook, Post
 
 # ----------- Home Page -----------
 # Add upvote feature, comment feature, and filter (using join table)
+
+# Display all posts - filter by category
+# Want to be able to filter by plant (not done)
 @blog.route('/', methods=['GET', 'POST'])
 def index():
     title = 'Home'
     posts = Post.query.all()
 
     # Filter by Category
-    form = CategoryForm()
+    form = FilterForm()
+    
 
     if form.validate_on_submit():
         category_to_filter = form.category_to_filter.data
-        if category_to_filter != 'no_filter':
-            posts = Post.query.filter(Post.category == category_to_filter).all()
+        plant_to_filter = form.plant_to_filter.data
+        print(plant_to_filter, "plant_to_filter")
+        plant = Plant.query.filter( (Plant.common_name.ilike(f'%{plant_to_filter}%')) | (Plant.scientific_name.ilike(f'%{plant_to_filter}%')) ).first()
+        print(plant, "plant")
+
+        if category_to_filter == 'no_filter' and plant == None:
+            posts = Post.query.all()
+        elif plant == None and category_to_filter != 'no_filter':
+            posts = db.session.query(Post).join(Plant).filter(Post.category==category_to_filter).all()
+        elif category_to_filter == 'no_filter' and plant != None:
+            posts = db.session.query(Post).join(Plant).filter(Post.plant_id == Plant.id).filter(Plant.id == plant.id).all()
+        else:
+            posts = db.session.query(Post).join(Plant).filter(Post.category==category_to_filter).filter(Post.plant_id == plant.id).all()
         return render_template('index.html', posts=posts, form=form)
 
     return render_template('index.html', title=title, posts=posts, form = form)

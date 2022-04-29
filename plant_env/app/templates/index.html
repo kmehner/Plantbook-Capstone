@@ -2,31 +2,32 @@
 
 
 {% block content %}
-
-    <div class="container text-center pt-4">
+<div class="container">
+    <div class="row d-flex justify-content-end">
         {% if current_user.is_authenticated %}
+        <div class="col-4 mt-3" id="filter-container">
+            <form method="post" enctype="multipart/form-data">
+                {{ form.csrf_token }}
+            
+                    <div class="form-group">
+                    {{ form.plant_to_filter.label }}
+                    {{ form.plant_to_filter(class='form-control', placeholder='Enter Plant to Search') }}
+
+                    {{ form.category_to_filter.label }}
+                    {{ form.category_to_filter(class='form-control') }}
+            
+                    {{ form.submit(class='btn btn-outline-dark mt-3 w-100') }}
+                    </div>
+            </form>
+        </div>
+
         {% else %}
         <h3>Hello! Please Sign Up or Login</h3>
         {% endif %}
-    </div>
-
-    <div class="row">
-        <form method="post" enctype="multipart/form-data">
-            {{ form.csrf_token }}
         
-                <div class="form-group">
-                {{ form.category_to_filter.label }}
-                {{ form.category_to_filter(class='form-control') }}
-        
-                {{ form.submit(class='btn btn-outline-primary w-100') }}
-                </div>
-        </form>
-    </div>
-
-    <div class="row">
         {% for p in posts %}
             {% if p.category == "watering_schedule" %}
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-8">
                     <div class="card mt-3">
                         <div class="card-body">
                             <h5 class="card-title text-center">Watering Schedule</h5>
@@ -41,7 +42,7 @@
                     </div>
                 </div>
             {% else %}
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-8">
                     <div class="card mt-3">
                         <div class="card-body">
                             <h5 class="card-title text-center">{{ p.title }}</h5>
@@ -55,6 +56,9 @@
                 </div>
             {% endif %}
         {% endfor %}
+
     </div>
+</div>  
+
 
 {% endblock content %}

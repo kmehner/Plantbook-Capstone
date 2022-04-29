@@ -51,7 +51,8 @@ class PhotoForm(FlaskForm):
     image = FileField('Image')
     submit = SubmitField('Create')
 
-class CategoryForm(FlaskForm):
+class FilterForm(FlaskForm):
+    plant_to_filter = StringField('Plant Name')
     category_to_filter = SelectField('Category', choices=[
                                  ('no_filter', 'No Filter'),
                                  ('health_issues', 'Health Issue'),
