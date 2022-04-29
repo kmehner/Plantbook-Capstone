@@ -49,7 +49,7 @@
                             <p class="card-title text-center">{{ p.body }}</p>
                             <!-- Display category img based on category -->
                             <div class="d-flex justify-content-center">
-                            <a href="{{ url_for('blog.single_post', post_id=p.id) }}" class="btn btn-primary w-50">More Info</a>
+                            <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn btn-primary w-50">Bookmark</a>
                             </div>
                         </div>
                     </div>

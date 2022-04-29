@@ -3,7 +3,7 @@ from app import db
 from flask import redirect, render_template, url_for, flash, g
 from flask_login import login_required, current_user
 from .forms import HealthForm, PhotoForm, PostForm, SearchForm, PlantForm, WaterForm, FilterForm
-from .models import Plant, PlantBook, Post
+from .models import Bookmark, Plant, PlantBook, Post
 
 # ----------- Home Page -----------
 # Add upvote feature, comment feature, and filter (using join table)
@@ -206,18 +206,48 @@ def plant_info(plant_id):
 def plantbook_more_info(plant_id, category):
  
     plant = Plant.query.get_or_404(plant_id)
-    plant_id = plant_id
+    plant_id = plant.id
     g.plant_id = plant_id
     # current_user
     current_user_id = current_user.id
     # category 
     category=category
 
-    # Query for posts you want from the posts (we need this id)
-    posts = Post.query.filter( Post.plant_id == plant_id, Post.user_id == current_user_id, Post.category == category).all()
+    # Query for posts you want 
+    # posts = Post.query.filter( Post.plant_id == plant_id, Post.user_id == current_user_id, Post.category == category).all()
+    posts = db.session.query(Post).join(Bookmark).filter(Post.plant_id == plant_id, Post.category==category).filter((Post.user_id == current_user.id) | (Bookmark.user_id == current_user.id) ).all()
+    print(posts, "posts")
     
     # Return render_template for basic display 
     return render_template(f'plantbook_more_info.html', plant=plant, posts=posts, category=category)
+
+# BOOKMARK POST
+@blog.route('/bookmark-post/<post_id>', methods=["GET", "POST"])
+@login_required
+def bookmark_post(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    if post in current_user.bookmarks:
+        flash("This post is already saved to your bookmarks!", 'danger')
+    else:
+        new_bookmark = Bookmark(post_id = post_id, user_id = current_user.id)
+        flash("A new bookmark has been saved!", "success")
+    return redirect(url_for('index'))
+
+# DELETE BOOKMARK
+@blog.route('/delete-bookmark/<post_id>', methods=["GET", "POST"])
+@login_required
+def delete_bookmark(post_id):
+   
+    post = Post.query.get_or_404(post_id)
+    post_id = post.id
+    bookmark = Bookmark.query.get_or_404(post_id)
+
+    bookmark.delete()
+    flash("The bookmark has successfully been removed", "success")
+    
+    # Needs to redirect to another page
+    return redirect(url_for('index'))
 
 
 # CREATE POST

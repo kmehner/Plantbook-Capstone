@@ -16,6 +16,7 @@ class User(db.Model, UserMixin):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     plants = db.relationship('Plant', secondary='plant_book',backref='publisher', lazy='dynamic')
+    bookmarks = db.relationship('Bookmark', backref='user_bookmark', lazy='dynamic')
 
 
     def __init__(self, **kwargs):
