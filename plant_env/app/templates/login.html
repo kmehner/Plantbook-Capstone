@@ -3,14 +3,14 @@
 
 {% block content %}
 
-    <div class="container">
+    <div class="container mt-3 pb-3 text-dark" id="login-container">
         <div class="row">
             <div class="col"></div>
             <div class="col-8">
                 <form method="post">
                     {{ form.csrf_token }}
                     <div class="form-group mt-3">
-                        <h1>Log In</h1>
+                        <h1 class="text-center">Log In</h1>
         
                         {{ form.username.label }}
                         {{ form.username(class='form-control', placeholder='Username') }}
@@ -18,7 +18,9 @@
                         {{ form.password.label }}
                         {{ form.password(class='form-control', placeholder='Password') }}
         
-                        {{ form.submit(class='btn btn-primary mt-3') }}
+                        <div class="d-flex justify-content-center">
+                            {{ form.submit(class='btn btn-dark mt-3') }}
+                        </div>
                     </div>
                 </form>
             </div>

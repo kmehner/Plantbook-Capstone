@@ -23,12 +23,9 @@ def index():
     if form.validate_on_submit():
         plant = None
         category_to_filter = form.category_to_filter.data
-        print(category_to_filter, "plant_to_filter")
         plant_to_filter = form.plant_to_filter.data
-        print(plant_to_filter, "plant_to_filter")
         if plant_to_filter != "":
             plant = Plant.query.filter( (Plant.common_name.ilike(f'%{plant_to_filter}%')) | (Plant.scientific_name.ilike(f'%{plant_to_filter}%')) ).first()
-            print(plant, "plant")
 
         if plant is None and plant_to_filter and category_to_filter == 'no_filter': # No filter, no plant_to_filter
             posts = []

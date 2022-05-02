@@ -3,6 +3,21 @@
 
 {% block content %}
 <div class="container mt-3">
+
+   {% if current_user.is_authenticated %}
+   <!-- <div class="row text-center">
+        <div class="col">
+            <h3>Explore PlantBook</h3>
+        </div>
+    </div> -->
+    {% else %}
+        <div class="row text-center">
+            <div class="col">
+                <h3>Hello! <br> Please Sign Up or Login</h3>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="row d-flex justify-content-end">
         {% if current_user.is_authenticated %}
             <div class="col-4" id="filter-container">
@@ -20,9 +35,6 @@
                         </div>
                 </form>
             </div>
-
-        {% else %}
-            <h3>Hello! Please Sign Up or Login</h3>
         {% endif %}
 
         {% if posts == [] %}
@@ -35,58 +47,64 @@
             </div>
         {% else %}
         
-        {% for p in posts %}
-            {% if p.category == "watering_schedule" %}
-                <div class="col-8">
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <h5 class="card-title text-center">Watering Schedule</h5>
-                                <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn w-25"><span class="fas fa-bookmark"></span></a>
-                            </div>
-                            <div class="card-title text-center">
-                                <p>{{p.water_quantity}} {{p.water_measurement}} of water</p>
-                                <p>Every {{p.frequency_int}} {{p.frequency_measurement}}</p>
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <img src="{{ p.image_url }}" alt="" class="img-fluid w-100">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% elif p.category == "photo_diary" %}
-                <div class="col-8 m-0">
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <p class="card-title text-center">Photo Diary Entry</p>
-                                <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn w-25"><span class="fas fa-bookmark"></span></a>
-                            </div>
-                            <p class="card-title text-center">{{ p.body }}</p>
-                            <div class="d-flex justify-content-center">
-                                <img src="{{ p.image_url }}" alt="" class="img-fluid w-100">
+            {% for p in posts %}
+                {% if p.category == "watering_schedule" %}
+                    <div class="col-8">
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title text-center">Watering Schedule</h5>
+                                    {% if current_user.is_authenticated and current_user.id != p.author %}
+                                    <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn w-25"><span class="fas fa-bookmark"></span></a>
+                                    {% endif %}
+                                </div>
+                                <div class="card-title text-center">
+                                    <p>{{p.water_quantity}} {{p.water_measurement}} of water</p>
+                                    <p>Every {{p.frequency_int}} {{p.frequency_measurement}}</p>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{ p.image_url }}" alt="" class="img-fluid w-100">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% else %}
-                <div class="col-8 m-0">
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <h5 class="card-title text-center">{{ p.title }}</h5>
-                                <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn w-25"><span class="fas fa-bookmark"></span></a>
+                {% elif p.category == "photo_diary" %}
+                    <div class="col-8 m-0">
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <p class="card-title text-center">Photo Diary Entry</p>
+                                    {% if current_user.is_authenticated and current_user.id != p.author %}
+                                    <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn w-25"><span class="fas fa-bookmark"></span></a>
+                                    {% endif %}
+                                </div>
+                                <p class="card-title text-center">{{ p.body }}</p>
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{ p.image_url }}" alt="" class="img-fluid w-100">
+                                </div>
                             </div>
-                            <p class="card-title text-center">{{ p.body }}</p>
-                            <div class="d-flex justify-content-center">
-                                <img src="{{ p.image_url }}" alt="" class="img-fluid w-100">
-                            </div>
-                            <!-- Display category img based on category -->
                         </div>
                     </div>
-                </div>
-            {% endif %}
-        {% endfor %}
+                {% else %}
+                    <div class="col-8 m-0">
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title text-center">{{ p.title }}</h5>
+                                    {% if current_user.is_authenticated and current_user != p.user_id %}
+                                    <a href="{{ url_for('blog.bookmark_post', post_id=p.id) }}" class="btn w-25"><span class="fas fa-bookmark"></span></a>
+                                    {% endif %}
+                                </div>
+                                <p class="card-title text-center">{{ p.body }}</p>
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{ p.image_url }}" alt="" class="img-fluid w-100">
+                                </div>
+                                <!-- Display category img based on category -->
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
         {% endif %}
 
     </div>

@@ -9,7 +9,7 @@
                 <form method="post">
                     {{ form.csrf_token }}
                     <div class="form-group mt-3">
-                        <h1>Sign Up</h1>
+                        <h1 class="text-center">Sign Up</h1>
                         {{ form.email.label }}
                         {{ form.email(class='form-control', placeholder='Email') }}
             
@@ -22,7 +22,9 @@
                         {{ form.confirm_pass.label }}
                         {{ form.confirm_pass(class='form-control', placeholder='Confirm Password') }}
             
-                        {{ form.submit(class='btn btn-primary mt-3') }}
+                        <div class="d-flex justify-content-center">
+                            {{ form.submit(class='btn btn-dark mt-3') }}
+                        </div>
                     </div>
                 </form>
             </div>
